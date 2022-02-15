@@ -8,6 +8,7 @@ const path = require("path")
 /**
  * init
  */
+let win: BrowserWindow
 const isDevelopment = process.env.NODE_ENV !== "prd"
 
 protocol.registerSchemesAsPrivileged([
@@ -26,8 +27,8 @@ app.whenReady().then(() => {
   const contextMenu = Menu.buildFromTemplate([
     { label: "「ぜんぶひらく」を実行", type: "normal" },
     { label: "「ぜんぶとじる」を実行", type: "normal" },
-    { label: "設定",                 type: "normal" },
-    { label: "終了",                 role: "quit" },
+    { label: "設定", type: "normal", click: () => { win.show() } },
+    { label: "終了", role: "quit" },
   ])
   tray.setContextMenu(contextMenu)
   tray.setToolTip("ぜんぶひらく")
@@ -40,7 +41,8 @@ const width = 1111
 const height = 666
 
 async function createWindow() {
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
+    show: false,
     width: width,
     height: height,
     minWidth: 777,
