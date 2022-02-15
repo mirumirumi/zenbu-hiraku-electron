@@ -8,6 +8,6 @@ export const declareElectronApis = (win: BrowserWindow): void => {
   })
 
   ipcMain.handle("closeWindow", (e, arg) => {
-    win.close()
+    win.hide()
   })
 }
