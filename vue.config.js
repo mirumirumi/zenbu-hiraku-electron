@@ -11,6 +11,7 @@ module.exports = {
     : "/",
   pluginOptions: {
     electronBuilder: {
+      preload: "src/preload.ts",
       builderOptions: {
         productName: "ぜんぶひらく",
         appId: "com.mirumi.zenbu-hiraku",

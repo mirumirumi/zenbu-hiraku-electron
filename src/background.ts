@@ -1,10 +1,11 @@
 import { app, protocol, BrowserWindow } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
+const path = require("path")
+import { declareElectronApis } from "./electronApis"
 
 const isDevelopment = process.env.NODE_ENV !== 'prd'
 
-// Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
@@ -13,7 +14,6 @@ const width = 1111
 const height = 666
 
 async function createWindow() {
-  // Create the browser window.
   const win = new BrowserWindow({
     width: width,
     height: height,
@@ -23,23 +23,22 @@ async function createWindow() {
     maxHeight: height,
     maximizable: false,
     fullscreenable: false,
-    // icon: "assets/icon.ico",
-    titleBarStyle: "hidden",
-    titleBarOverlay: true,
+    frame: false,
     backgroundColor: "#fffcf9",
+    opacity: 0.98,
     webPreferences: {
-      // Use pluginOptions.nodeIntegration, leave this alone
-      // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-      // (tsuiki): if `true`, IPC can be used with Node processes. Currently it is `false`.
       nodeIntegration: (process.env.ELECTRON_NODE_INTEGRATION as unknown) as boolean,
-      contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION
+      contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
+      spellcheck: false,
+      preload: path.join(__dirname, "preload.js")  // <-- not `ts`!
     }
   })
 
+  declareElectronApis(win)
+
   if (process.env.WEBPACK_DEV_SERVER_URL) {
-    // Load the url of the dev server if in development mode
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string)
-    if (!process.env.IS_TEST) win.webContents.openDevTools()
+    // if (!process.env.IS_TEST) win.webContents.openDevTools()
   } else {
     createProtocol('app')
     // Load the index.html when not in development
