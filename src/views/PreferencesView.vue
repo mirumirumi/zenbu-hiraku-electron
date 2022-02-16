@@ -26,7 +26,7 @@
         <div class="setting_ui">
           <NumberInput settingName="delayExec" @delayExec="changeDelayExec" :value="delayExec" width="5.5em" :tabIndex="-1" />
         </div>
-        <SaveSucceeded v-if="0" />
+        <SaveSucceeded v-if="isChangeSettingDelayExec" />
       </div>
     </div>
     <div class="group">
@@ -83,10 +83,12 @@ defineEmits<{
 
 const isChangeSettingNowStartAtWindows =       ref(false)
 const isChangeSettingNowExecAtStartApp =       ref(false)
+const isChangeSettingDelayExec =               ref(false)
 const isChangeSettingNowConfirmAutoUpdateApp = ref(false)
 
 let timerIdStartAtWindows = 0
 let timerIdExecAtStartApp = 0
+let timerIdDelayExec = 0
 let timerIdConfirmAutoUpdateApp = 0
 
 const changeStartAtWindows = async (result: boolean) => {
@@ -118,6 +120,10 @@ const changeExecAtStartApp = async (result: boolean) => {
 const changeDelayExec = async (result: number) => {
   localStorage.setItem("delayExec", result.toString())
 
+  isChangeSettingDelayExec.value = true
+
+  clearTimeout(timerIdDelayExec)
+  timerIdDelayExec = window.setTimeout(() => { isChangeSettingDelayExec.value = false }, 1111)
 }
 
 const changeConfirmAutoUpdateApp = async (result: boolean) => {
@@ -148,7 +154,9 @@ const changeConfirmAutoUpdateApp = async (result: boolean) => {
       .setting_description {
         margin-bottom: 1px;
         span {
-          font-size: 0.9em;
+          color: #6d6d6d;
+          font-size: 0.88em;
+          font-weight: bold;
         }
       }
       .setting_ui {
@@ -157,7 +165,9 @@ const changeConfirmAutoUpdateApp = async (result: boolean) => {
         align-items: center;
       }
       .save_succeeded {
+        display: flex;
         margin-left: 2em;
+        margin-bottom: 2.3px;
       }
     }
   }
