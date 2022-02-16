@@ -7,18 +7,15 @@
 <script setup lang="ts">
 import { ref } from "vue"
 import router from "@/router/router"
+import { pagingInit } from "@/utils/utils"
 
 /**
  * paging init
  */
-const menus = document.getElementsByClassName("menu_item")
-for (const menu  of menus) {
-  (menu as HTMLElement).style.backgroundColor = ""
-}
+pagingInit(router.currentRoute.value.name as string)
 
-if (router.currentRoute.value.name === "ZenbuHiraku") {
-  (document.getElementById("zenbu_hiraku") as HTMLDivElement).style.backgroundColor = "#e1dbd7"
-}
+
+
 
 </script>
 
