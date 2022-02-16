@@ -53,7 +53,7 @@ async function createWindow() {
     fullscreenable: false,
     frame: false,
     backgroundColor: "#fffcf9",
-    opacity: 0.98,
+    // opacity: 0.98,
     webPreferences: {
       nodeIntegration: (process.env.ELECTRON_NODE_INTEGRATION as unknown) as boolean,
       contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
