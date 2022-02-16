@@ -9,10 +9,10 @@
       </div>
     </div>
     <div class="window_control">
-      <button type="button" class="button" @click="minimize" @mouseenter="mouseEnterWindowControl(`minimize`, $event)" @mouseleave="mouseLeave">
+      <button type="button" class="button" @click="minimize" @mouseenter="mouseEnterWindowControl(`minimize`, $event)" @mouseleave="mouseLeave" tabindex="-1">
         <SvgIcon icon="hyphen" color="#888888" />
       </button>
-      <button type="button" class="button" @click="close" @mouseenter="mouseEnterWindowControl(`close`, $event)" @mouseleave="mouseLeave">
+      <button type="button" class="button" @click="close" @mouseenter="mouseEnterWindowControl(`close`, $event)" @mouseleave="mouseLeave" tabindex="-1">
         <SvgIcon icon="close" color="#888888" />
       </button>
     </div>

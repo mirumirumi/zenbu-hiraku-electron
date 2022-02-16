@@ -24,7 +24,7 @@
           <span>「ぜんぶひらく」全体の実行タイミングの遅延（秒）</span>
         </div>
         <div class="setting_ui">
-          
+          <NumberInput settingName="delayExec" @delayExec="changeDelayExec" :value="delayExec" width="5.5em" :tabIndex="-1" />
         </div>
         <SaveSucceeded v-if="0" />
       </div>
@@ -47,6 +47,7 @@
 import { onBeforeMount, ref } from "vue"
 import router from "@/router/router"
 import CheckButton from "@/components/parts/CheckButton.vue"
+import NumberInput from "@/components/parts/NumberInput.vue"
 import SaveSucceeded from "@/components/parts/SaveSucceeded.vue"
 import { pagingInit, toBool, delay } from "@/utils/utils"
 
@@ -60,11 +61,13 @@ pagingInit(router.currentRoute.value.name as string)
  */
 const isStartAtWindows =       ref(true)
 const isExecAtStartApp =       ref(true)
+const delayExec =              ref(10)
 const isConfirmAutoUpdateApp = ref(true)
 
 onBeforeMount(() => {
   isStartAtWindows.value =       toBool(localStorage.getItem("isStartAtWindows")       ?? "true")
   isExecAtStartApp.value =       toBool(localStorage.getItem("isExecAtStartApp")       ?? "true")
+  delayExec.value =              parseInt(localStorage.getItem("delayExec") ?? "10")
   isConfirmAutoUpdateApp.value = toBool(localStorage.getItem("isConfirmAutoUpdateApp") ?? "true")
 })
 
@@ -74,6 +77,7 @@ onBeforeMount(() => {
 defineEmits<{
   (e: "isStartAtWindows",       value: boolean): void,
   (e: "isExecAtStartApp",       value: boolean): void,
+  (e: "delayExec",              value: number) : void,
   (e: "isConfirmAutoUpdateApp", value: boolean): void,
 }>()
 
@@ -111,6 +115,11 @@ const changeExecAtStartApp = async (result: boolean) => {
   timerIdExecAtStartApp = window.setTimeout(() => { isChangeSettingNowExecAtStartApp.value = false }, 1111)
 }
 
+const changeDelayExec = async (result: number) => {
+  localStorage.setItem("delayExec", result.toString())
+
+}
+
 const changeConfirmAutoUpdateApp = async (result: boolean) => {
   localStorage.setItem("isConfirmAutoUpdateApp", result.toString())
 
@@ -123,10 +132,6 @@ const changeConfirmAutoUpdateApp = async (result: boolean) => {
   clearTimeout(timerIdConfirmAutoUpdateApp)
   timerIdConfirmAutoUpdateApp = window.setTimeout(() => { isChangeSettingNowConfirmAutoUpdateApp.value = false }, 1111)
 }
-
-
-
-
 </script>
 
 <style lang="scss" scoped>
@@ -136,15 +141,23 @@ const changeConfirmAutoUpdateApp = async (result: boolean) => {
     margin-bottom: 60px;
     .setting_item {
       display: grid;
-      grid-template-columns: 2fr 0.5fr 1fr;
-      margin-bottom: 20px;
+      grid-template-columns: 1.9fr 0.4fr 1fr;
+      height: 30px;
+      margin-bottom: 15px;
+      align-items: center;
       .setting_description {
+        margin-bottom: 1px;
         span {
-
+          font-size: 0.9em;
         }
       }
       .setting_ui {
-        text-align: center;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+      }
+      .save_succeeded {
+        margin-left: 2em;
       }
     }
   }

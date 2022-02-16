@@ -1,6 +1,6 @@
 <template>
   <div class="sidemenu_wrap">
-    <router-link to="/zenbu_hiraku" class="menu_item" id="zenbu_hiraku">
+    <router-link to="/zenbu_hiraku" class="menu_item" id="zenbu_hiraku" tabindex="-1">
       <div class="icon">
         <SvgIcon icon="folder" color="#6D6D6D" />
       </div>
@@ -8,7 +8,7 @@
         <span>「ぜんぶひらく」の設定</span>
       </div>
     </router-link>
-    <router-link to="/preferences" class="menu_item" id="preferences">
+    <router-link to="/preferences" class="menu_item" id="preferences" tabindex="-1">
       <div class="icon" style="margin-top: 1px;">
         <SvgIcon icon="setting" color="#6D6D6D" />
       </div>
@@ -16,7 +16,7 @@
         <span>全般</span>
       </div>
     </router-link>
-    <router-link to="/version_information" class="menu_item" id="version_information">
+    <router-link to="/version_information" class="menu_item" id="version_information" tabindex="-1">
       <div class="icon" style="margin-top: 1px;">
         <SvgIcon icon="info" color="#6D6D6D" />
       </div>
@@ -45,8 +45,9 @@ import SvgIcon from '../parts/SvgIcon.vue'
     border-radius: 5px;
     text-decoration: none;
     cursor: pointer;
+    transition: 0.13s ease-out;
     &:hover {
-      background-color: #e1dbd7;
+      background-color: #ebe8e6;
     }
     .icon {
       position: relative;

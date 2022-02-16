@@ -18,8 +18,7 @@ const isEnable = ref(p.value)
 
 <style lang="scss" scoped>
 .check_button {
-  display: table;
-  margin: 0 auto;
+  display: inline-block;
   font-size: 20px;
   input {
     display: none;

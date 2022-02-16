@@ -33,6 +33,6 @@ export const pagingInit = (pageName: string): void => {
   (document.getElementById(target) as HTMLDivElement).style.backgroundColor = "#e1dbd7"
 }
 
-export const toBool = (data: string) => {
+export const toBool = (data: string): boolean => {
   return data.toLowerCase() === "true"
 }
