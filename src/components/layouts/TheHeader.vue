@@ -76,6 +76,7 @@ const mouseLeave = ((e: Event) => {
       justify-content: center;
       align-items: center;
       border-radius: 0;
+      cursor: auto;
       svg {
         width: 0.7em;
       }

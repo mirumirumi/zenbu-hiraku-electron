@@ -1,6 +1,6 @@
 <template>
   <div class="check_button">
-    <input type="checkbox" :id="settingName" v-model="isEnable" @click="$emit(settingName, !isEnable) /* because the value is before reflection */">
+    <input type="checkbox" :id="settingName" v-model="isEnable" @click="$emit(settingName!, !isEnable) /* because the value is before reflection */">
     <label :for="settingName"></label>
   </div>
 </template>
@@ -9,7 +9,7 @@
 import { ref } from "vue"
 
 const p = defineProps<{
-  settingName: string,
+  settingName?: string,
   value: boolean,
 }>()
 

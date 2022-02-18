@@ -70,6 +70,13 @@ ul, li {
   background-color: transparent;
   appearance: none;
   transition: 0.13s ease-out;
+  &:focus {
+    border-color: rgba(242, 101, 11, 0.37);
+    box-shadow: 0 0 0 0.1rem rgba(242, 101, 11, 0.37)
+  }
+  &:focus-visible {
+    outline: none;
+  }
 }
 .input:focus {
   outline: 0;

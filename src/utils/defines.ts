@@ -6,7 +6,7 @@ export interface OpenItem {
 }
 
 export enum WindowType {
-  NO  = 1,
-  MIN = 2,
-  MAX = 3,  
+  NO  = "指定なし",
+  MIN = "最小化",
+  MAX = "最大化",  
 }

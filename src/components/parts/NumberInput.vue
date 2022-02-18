@@ -1,6 +1,6 @@
 <template>
   <div class="number_input">
-    <input type="number" class="input" :id="settingName" v-model="number"  @change="$emit(settingName ?? ``, number)" :tabindex="tabIndex" :placeholder="placeholder" min="0" max="999">
+    <input type="number" class="input" :id="settingName" v-model="number"  @change="$emit(settingName!, number)" :tabindex="tabIndex" :placeholder="placeholder" min="0" max="999">
   </div>
 </template>
 
@@ -30,13 +30,6 @@ watch(number, () => {
   input {
     width: v-bind(width);
     text-align: v-bind(textAlign);
-    &:focus {
-      border-color: rgba(242, 101, 11, 0.37);
-      box-shadow: 0 0 0 0.1rem rgba(242, 101, 11, 0.37)
-    }
-    &:focus-visible {
-      outline: none;
-    }
   }
 }
 input[type=number]::-webkit-inner-spin-button, 
