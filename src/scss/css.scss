@@ -61,12 +61,18 @@ ul, li {
   }
 }
 .input {
-  transition: border-color 0.13s ease-in-out, box-shadow 0.13s ease-in-out;
+  padding: 0.4em 0.7em 0.33em 0.4em;
+  color: #737373;
+  font-weight: bold;
+  font-family: Consolas, "Meiryo UI";
+  border: solid 1.9px #c9c9c9;
+  border-radius: 6px;
+  background-color: transparent;
+  appearance: none;
+  transition: 0.13s ease-out;
 }
 .input:focus {
-  border-color: #feae86 !important;
   outline: 0;
-  box-shadow: 0 0 0 0.25rem rgba(242, 101, 11, 0.37) !important;
 }
 .input::placeholder {
   color: #d2d2d2;

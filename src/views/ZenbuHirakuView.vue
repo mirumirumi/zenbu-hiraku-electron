@@ -1,7 +1,7 @@
 <template>
   <div class="zenbu_hiraku_wrap">
-    <div class="item_wrap">
-      <OpenItem v-for="i in 5" :key="i" />
+    <div class="items_wrap">
+      <OpenItemComponent v-for="i, index in example" :openItem="i" :key="index" />
     </div>
     <div class="add_button">
       <button type="button" class="button">
@@ -16,14 +16,37 @@
 import { ref } from "vue"
 import router from "@/router/router"
 import { pagingInit } from "@/utils/utils"
+import { OpenItem, WindowType } from "@/utils/defines"
 import SvgIcon from "@/components/parts/SvgIcon.vue"
-import OpenItem from "@/components/modules/OpenItem.vue"
+import OpenItemComponent from "@/components/modules/OpenItem.vue"
 
 /**
  * paging init
  */
 pagingInit(router.currentRoute.value.name as string)
 
+
+
+const example: Array<OpenItem> = [
+  {
+    path:   "string",
+    delay:  3,
+    window: WindowType.MAX,
+    enable: true,
+  },
+  {
+    path:   "s;lifvnamscfla",
+    delay:  5,
+    window: WindowType.MAX,
+    enable: false,
+  },
+  {
+    path:   "striasfvang",
+    delay:  1,
+    window: WindowType.MIN,
+    enable: true,
+  },
+]
 
 
 
@@ -33,7 +56,7 @@ pagingInit(router.currentRoute.value.name as string)
 <style lang="scss" scoped>
 .zenbu_hiraku_wrap {
   overflow-y: scroll;
-  .item_wrap {
+  .items_wrap {
     margin-bottom: 30px;
   }
   .add_button {

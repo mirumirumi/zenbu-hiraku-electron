@@ -24,7 +24,7 @@
           <span>「ぜんぶひらく」全体の実行タイミングの遅延（秒）</span>
         </div>
         <div class="setting_ui">
-          <NumberInput settingName="delayExec" @delayExec="changeDelayExec" :value="delayExec" width="5.5em" :tabIndex="-1" />
+          <NumberInput settingName="delayExec" @delayExec="changeDelayExec" :value="delayExec" width="6em" :tabIndex="-1" />
         </div>
         <SaveSucceeded v-if="isChangeSettingDelayExec" />
       </div>
