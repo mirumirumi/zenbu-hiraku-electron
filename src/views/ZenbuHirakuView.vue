@@ -4,7 +4,7 @@
       <OpenItemComponent v-for="i, index in example" :openItem="i" :key="index" />
     </div>
     <div class="add_button">
-      <button type="button" class="button">
+      <button type="button" class="button" tabindex="-1">
         <SvgIcon icon="add" color="#646464" />
         <span>追加する</span>
       </button>

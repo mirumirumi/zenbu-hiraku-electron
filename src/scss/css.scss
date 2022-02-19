@@ -59,6 +59,9 @@ ul, li {
       opacity: 0.777;
     }
   }
+  &:focus-visible {
+    outline: none;
+  }
 }
 .input {
   padding: 0.4em 0.7em 0.33em 0.4em;

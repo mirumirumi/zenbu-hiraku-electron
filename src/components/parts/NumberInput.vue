@@ -12,7 +12,7 @@ const p = defineProps<{
   value: number,
   width: string,
   textAlign?: string,
-  tabIndex: number,
+  tabIndex?: number,
   placeholder?: string,
 }>()
 

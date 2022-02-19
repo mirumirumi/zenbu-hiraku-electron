@@ -10,7 +10,7 @@
       <input type="text" class="input" v-model="item.path" placeholder="ファイルやアプリケーションの絶対パス">
     </div>
     <div class="delay">
-      <NumberInput :value="item.delay" width="auto" :tabIndex="0" :placeholder="`起動後遅延:秒`" />
+      <NumberInput :value="item.delay" width="auto" :placeholder="`起動後遅延:秒`" />
     </div>
     <div class="window">
       <SelectInput :items="[WindowType.NO, WindowType.MIN, WindowType.MAX]" :current="item.window" />
