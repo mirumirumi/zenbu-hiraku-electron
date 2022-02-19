@@ -24,7 +24,7 @@
           <span>「ぜんぶひらく」全体の実行タイミングの遅延（秒）</span>
         </div>
         <div class="setting_ui">
-          <NumberInput settingName="delayExec" @delayExec="changeDelayExec" :value="delayExec" width="6em" :tabIndex="-1" />
+          <NumberInput settingName="delayExec" @delayExec="changeDelayExec" :value="delayExec" width="6em" :tabindex="-1" />
         </div>
         <SaveSucceeded v-if="isChangeSettingDelayExec" />
       </div>
@@ -74,13 +74,6 @@ onBeforeMount(() => {
 /**
  * setting save
  */
-defineEmits<{
-  (e: "isStartAtWindows",       value: boolean): void,
-  (e: "isExecAtStartApp",       value: boolean): void,
-  (e: "delayExec",              value: number) : void,
-  (e: "isConfirmAutoUpdateApp", value: boolean): void,
-}>()
-
 const isChangeSettingNowStartAtWindows =       ref(false)
 const isChangeSettingNowExecAtStartApp =       ref(false)
 const isChangeSettingDelayExec =               ref(false)
@@ -91,7 +84,7 @@ let timerIdExecAtStartApp = 0
 let timerIdDelayExec = 0
 let timerIdConfirmAutoUpdateApp = 0
 
-const changeStartAtWindows = async (result: boolean) => {
+const changeStartAtWindows = async (result: boolean): Promise<void> => {
   localStorage.setItem("isStartAtWindows", result.toString())
 
   if (isChangeSettingNowStartAtWindows.value) {
@@ -104,7 +97,7 @@ const changeStartAtWindows = async (result: boolean) => {
   timerIdStartAtWindows = window.setTimeout(() => { isChangeSettingNowStartAtWindows.value = false }, 1111)
 }
 
-const changeExecAtStartApp = async (result: boolean) => {
+const changeExecAtStartApp = async (result: boolean): Promise<void> => {
   localStorage.setItem("isExecAtStartApp", result.toString())
 
   if (isChangeSettingNowExecAtStartApp.value) {
@@ -117,7 +110,7 @@ const changeExecAtStartApp = async (result: boolean) => {
   timerIdExecAtStartApp = window.setTimeout(() => { isChangeSettingNowExecAtStartApp.value = false }, 1111)
 }
 
-const changeDelayExec = async (result: number) => {
+const changeDelayExec = (result: number): void => {
   localStorage.setItem("delayExec", result.toString())
 
   isChangeSettingDelayExec.value = true
@@ -126,7 +119,7 @@ const changeDelayExec = async (result: number) => {
   timerIdDelayExec = window.setTimeout(() => { isChangeSettingDelayExec.value = false }, 1111)
 }
 
-const changeConfirmAutoUpdateApp = async (result: boolean) => {
+const changeConfirmAutoUpdateApp = async (result: boolean): Promise<void> => {
   localStorage.setItem("isConfirmAutoUpdateApp", result.toString())
 
   if (isChangeSettingNowConfirmAutoUpdateApp.value) {

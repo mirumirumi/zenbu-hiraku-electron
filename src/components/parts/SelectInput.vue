@@ -49,7 +49,7 @@ const selectWithKeys = (e: KeyboardEvent, item: string): void => {
     decideSelect(item)
     return
   }
-  
+
   let to = now
   if (e.key === "ArrowUp") {
     to = now - 1
@@ -57,7 +57,7 @@ const selectWithKeys = (e: KeyboardEvent, item: string): void => {
     to = now + 1
   }
 
-  const result = tabIndexToId(to, p.items.length)
+  const result = tabindexToId(to, p.items.length)
   setTimeout(() => document.getElementById(result)?.focus(), 1)
 }
 
@@ -70,7 +70,7 @@ const closeSelections = () => {
   isSelecting.value = false
 }
 
-function tabIndexToId(to: number, maxlength: number): string {
+function tabindexToId(to: number, maxlength: number): string {
   let result = "item_" + uuid + "_"
   if (to <= 0) {
     result += "0"

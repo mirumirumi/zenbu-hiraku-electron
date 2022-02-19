@@ -1,12 +1,13 @@
 <template>
   <div class="check_button">
-    <input type="checkbox" :id="settingName" v-model="isEnable" @click="$emit(settingName!, !isEnable) /* because the value is before reflection */">
-    <label :for="settingName"></label>
+    <input type="checkbox" :id="uuid" v-model="isEnable" @click="emitEvent(isEnable)">
+    <label :for="uuid"></label>
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref } from "vue"
+import { v4 as uuidv4 } from "uuid"
 
 const p = defineProps<{
   settingName?: string,
@@ -14,6 +15,24 @@ const p = defineProps<{
 }>()
 
 const isEnable = ref(p.value)
+const uuid = uuidv4()
+
+const emit = defineEmits<{
+  (e: "itemEnable",             value: boolean): void,
+  (e: "isStartAtWindows",       value: boolean): void,
+  (e: "isExecAtStartApp",       value: boolean): void,
+  (e: "isConfirmAutoUpdateApp", value: boolean): void,
+}>()
+
+const emitEvent = (value: boolean) => {
+  if (p.settingName) {
+    emit("itemEnable",             !value)
+    emit("isStartAtWindows",       !value)
+    emit("isExecAtStartApp",       !value)
+    emit("isConfirmAutoUpdateApp", !value)
+    return
+  }
+}
 </script>
 
 <style lang="scss" scoped>

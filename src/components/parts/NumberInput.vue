@@ -1,6 +1,6 @@
 <template>
   <div class="number_input">
-    <input type="number" class="input" :id="settingName" v-model="number"  @change="$emit(settingName!, number)" :tabindex="tabIndex" :placeholder="placeholder" min="0" max="999">
+    <input type="number" class="input" v-model="number"  @change="emitEvent(number)" :tabindex="tabindex" :placeholder="placeholder" min="0" max="999">
   </div>
 </template>
 
@@ -12,13 +12,24 @@ const p = defineProps<{
   value: number,
   width: string,
   textAlign?: string,
-  tabIndex?: number,
+  tabindex?: number,
   placeholder?: string,
+}>()
+
+const emit = defineEmits<{
+  (e: "delayExec", value: number): void,
 }>()
 
 const number = ref(p.value)
 const width = ref(p.width)
 const textAlign = ref(p.textAlign ?? "right")
+
+const emitEvent = (value: number) => {
+  if (p.settingName) {
+    emit("delayExec", value)
+    return
+  }
+}
 
 watch(number, () => {
   if (number.value as unknown as string == "") number.value = 0

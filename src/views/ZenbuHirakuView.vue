@@ -29,19 +29,19 @@ pagingInit(router.currentRoute.value.name as string)
 
 const example: Array<OpenItem> = [
   {
-    path:   "string",
+    path:   "C:/Program Files\\Vivaldi\\Application/vivaldi.exe",
     delay:  3,
     window: WindowType.MAX,
     enable: true,
   },
   {
-    path:   "s;lifvnamscfla",
+    path:   "C:/Users/owner/Downloads",
     delay:  5,
     window: WindowType.MAX,
     enable: false,
   },
   {
-    path:   "striasfvang",
+    path:   "C:\\Users\\owner\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe",
     delay:  1,
     window: WindowType.MIN,
     enable: true,

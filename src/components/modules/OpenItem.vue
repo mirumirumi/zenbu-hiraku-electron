@@ -16,7 +16,7 @@
       <SelectInput :items="[WindowType.NO, WindowType.MIN, WindowType.MAX]" :current="item.window" />
     </div>
     <div class="enable">
-      <CheckButton :value="item.enable" />
+      <CheckButton :value="item.enable" @itemEnable="changeEnable" />
     </div>
     <div class="remove">
       <SvgIcon icon="remove" color="#f4695e" />
@@ -43,6 +43,16 @@ const p = defineProps<{
 const item = ref(p.openItem)
 
 
+
+/**
+ * save settings
+ */
+
+
+
+const changeEnable = (enable: boolean): void => {
+  // item.value.enable = enable
+}
 
 
 
