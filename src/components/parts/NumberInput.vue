@@ -38,6 +38,7 @@ watch(number, () => {
 
 <style lang="scss" scoped>
 .number_input {
+  width: v-bind(width);
   input {
     width: v-bind(width);
     text-align: v-bind(textAlign);

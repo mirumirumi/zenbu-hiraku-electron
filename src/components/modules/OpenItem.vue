@@ -4,16 +4,16 @@
       <SvgIcon icon="grab" color="#c9c9c9" />
     </div>
     <div class="icon">
-      <img src="@/assets/icon.png" style="height: 25px;">
+      <img src="@/assets/icon.png" style="height: 20px;">
     </div>
     <div class="path">
       <input type="text" class="input" v-model="item.path" placeholder="ファイルやアプリケーションの絶対パス">
     </div>
     <div class="delay">
-      <NumberInput :value="item.delay" width="auto" :placeholder="`起動後遅延:秒`" />
+      <NumberInput :value="item.delay" width="100%" :placeholder="`起動後遅延:秒`" />
     </div>
     <div class="window">
-      <SelectInput :items="[WindowType.NO, WindowType.MIN, WindowType.MAX]" :current="item.window" />
+      <SelectInput :items="[WindowType.NO, WindowType.MIN, WindowType.MAX]" :current="item.window" width="100%" />
     </div>
     <div class="enable">
       <CheckButton :value="item.enable" @itemEnable="changeEnable" />
@@ -66,6 +66,7 @@ const changeEnable = (enable: boolean): void => {
   margin-bottom: 0.7em;
   > div {
     display: flex;
+    margin: auto 10px;
   }
   .grab {
     position: relative;
@@ -79,13 +80,16 @@ const changeEnable = (enable: boolean): void => {
 
   }
   .path {
-
+    flex-grow: 2.875;
+    input {
+      width: 100%;
+    }
   }
   .delay {
-
+    flex-grow: 1.422;
   }
   .window {
-
+    width: 111px;
   }
   .enable {
 

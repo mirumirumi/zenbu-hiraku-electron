@@ -56,8 +56,8 @@ const example: Array<OpenItem> = [
 <style lang="scss" scoped>
 .zenbu_hiraku_wrap {
   overflow-y: scroll;
-  padding-left: 25px;
-  padding-right: 20px;  
+  padding-left: 17.5px;
+  padding-right: 15px;  
   .items_wrap {
     margin-bottom: 30px;
     padding-top: 20px;

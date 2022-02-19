@@ -23,11 +23,13 @@ import TransparentBack from "../modules/TransparentBack.vue"
 const p = defineProps<{
   items: Array<string>,
   current: string,
+  width?: string,
 }>()
 
 const uuid = uuidv4()
 const isSelecting = ref(false)
 const currentItem = ref(p.current)
+const width = ref(p.width)
 
 const toggleIsSelecting = (): void => {
   isSelecting.value = !isSelecting.value
@@ -86,15 +88,19 @@ function tabindexToId(to: number, maxlength: number): string {
 <style lang="scss" scoped>
 .select_input {
   position: relative;
+  width: v-bind(width);
   button {
+    width: v-bind(width);
     font-weight: 700;
     border-radius: 7px;
     .dropdown-caret {
-      display: inline-block;
+      position: absolute;
+      top: 2.1px;
+      bottom: 0;
+      right: 0.9em;
       width: 0;
       height: 0;
-      margin: 0 0 1px 3.5px;
-      vertical-align: middle;
+      margin: auto;
       content: "";
       border-style: solid;
       border-width: 4px 4px 0;
@@ -105,6 +111,7 @@ function tabindexToId(to: number, maxlength: number): string {
   }
   ul {
     position: absolute;
+    width: 100%;
     margin: 1px auto 0;
     padding: 0.34em 0 0.37em;
     max-height: 200px;
@@ -118,13 +125,15 @@ function tabindexToId(to: number, maxlength: number): string {
       position: relative;
       padding: 0.01em 1em 0.07em;
       font-size: 0.87em;
+      font-weight: bold;
+      color: #737373;
       white-space: nowrap;
       cursor: pointer;
       &:hover {
-        background-color: #eaeaea;
+        background-color: #e1ded9;
       }
       &:focus {
-        background-color: #eaeaea;
+        background-color: #e1ded9;
         outline: 0;
       }
     }
