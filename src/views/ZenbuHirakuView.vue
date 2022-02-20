@@ -1,8 +1,7 @@
 <template>
   <div class="zenbu_hiraku_wrap">
     <div class="items_wrap">
-      <!-- <OpenItemComponent v-for="i, index in example" :openItem="i" :key="index" /> -->
-      <VueDraggable :list="example" :itemKey="uuid" :move="dragged">
+      <VueDraggable :list="example" item-key="uuid" :move="dragged" tag="transition-gruoup">
         <template #item="{ element }">
           <OpenItemComponent :openItem="element" />
         </template>
@@ -27,8 +26,6 @@ import { OpenItem, WindowType } from "@/utils/defines"
 import SvgIcon from "@/components/parts/SvgIcon.vue"
 import OpenItemComponent from "@/components/modules/OpenItem.vue"
 
-const uuid = uuidv4()
-
 /**
  * paging init
  */
@@ -36,27 +33,29 @@ pagingInit(router.currentRoute.value.name as string)
 
 
 
-const example: Array<OpenItem> = [
+const example = ref<Array<OpenItem>>([
   {
     path:   "C:/Program Files\\Vivaldi\\Application/vivaldi.exe",
     delay:  3,
     window: WindowType.MAX,
     enable: true,
+    uuid:   uuidv4(),
   },
   {
     path:   "C:/Users/owner/Downloads",
     delay:  5,
     window: WindowType.MAX,
     enable: false,
+    uuid:   uuidv4(),
   },
   {
     path:   "C:\\Users\\owner\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe",
     delay:  1,
     window: WindowType.MIN,
     enable: true,
+    uuid:   uuidv4(),
   },
-]
-
+])
 
 
 /**
@@ -64,9 +63,8 @@ const example: Array<OpenItem> = [
  */
 const DRAGGABLE_AREA_MAX_X = 261
 
-const dragged = (event: any) => {  // eslint-disable-line
-  if (DRAGGABLE_AREA_MAX_X < event.originalEvent.clientX) return false
-
+const dragged = (e: any) => {  // eslint-disable-line
+  if (DRAGGABLE_AREA_MAX_X < e.originalEvent.clientX) return false
 }
 
 // for ghost element near the pointer hide under dragging
