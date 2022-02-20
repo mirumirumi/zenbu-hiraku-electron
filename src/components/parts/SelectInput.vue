@@ -1,6 +1,6 @@
 <template>
   <div class="select_input">
-    <button type="button" class="input select_button" :class="{ 'disable': !isDisable}" @click="toggleIsSelecting()">
+    <button type="button" class="input select_button" :class="{ 'disable': isDisable}" @click="toggleIsSelecting()">
       {{ currentItem }}
       <span class="dropdown-caret"></span>
     </button>

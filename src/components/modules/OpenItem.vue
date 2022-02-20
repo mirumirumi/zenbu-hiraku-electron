@@ -10,10 +10,10 @@
       <input type="text" class="input" :class="{ 'disable': !isEnable} " v-model="item.path" @input="getFileIcon" placeholder="開きたい対象の絶対パス">
     </div>
     <div class="delay">
-      <NumberInput :value="item.delay" :isDisable="isEnable" width="100%" :placeholder="`起動後遅延:秒`" />
+      <NumberInput :value="item.delay" :isDisable="!isEnable" width="100%" :placeholder="`起動後遅延:秒`" />
     </div>
     <div class="window">
-      <SelectInput :items="[WindowType.NO, WindowType.MIN, WindowType.MAX]" :current="item.window" :isDisable="isEnable" width="100%" />
+      <SelectInput :items="[WindowType.NO, WindowType.MIN, WindowType.MAX]" :current="item.window" :isDisable="!isEnable" width="100%" />
     </div>
     <div class="enable">
       <CheckButton :value="item.enable" @itemEnable="changeEnable" />

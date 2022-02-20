@@ -1,5 +1,5 @@
 <template>
-  <div class="zenbu_hiraku_wrap">
+  <div class="zenbu_hiraku_wrap" id="zh">
     <div class="items_wrap">
       <VueDraggable :list="items" item-key="uuid" :move="dragged">
         <template #item="{ element, index }">
@@ -97,6 +97,7 @@ const removeItem = (index: number) => {
 <style lang="scss" scoped>
 .zenbu_hiraku_wrap {
   overflow-y: scroll;
+  height: 100%;
   padding-left: 17.5px;
   padding-right: 15px;  
   .items_wrap {
@@ -104,7 +105,7 @@ const removeItem = (index: number) => {
     padding-top: 20px;
   }
   .add_button {
-    margin: 20px auto;
+    margin: 20px auto 100px;
     text-align: center;
     button {
       position: relative;
