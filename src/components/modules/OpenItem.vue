@@ -6,8 +6,11 @@
     <div class="icon">
       <img :src="iconDataUrl" :class="{ 'disable_image': !isEnable} ">
     </div>
-    <div class="path">
-      <input type="text" class="input" :class="{ 'disable': !isEnable} " v-model="item.path" @input="getFileIcon" placeholder="開きたい対象の絶対パス">
+    <div class="path" @mouseenter="seePathStart" @mouseleave="seePathEnd">
+      <input type="text" class="input" :class="{'disable': !isEnable}" v-model="item.path" @input="getFileIcon" placeholder="開きたい対象の絶対パス" id="path">
+      <transition name="fade">
+        <input v-if="isShowFullPath" type="text" class="input full_path" :class="{ 'disable': !isEnable} " v-model="item.path">
+      </transition>
     </div>
     <div class="delay">
       <NumberInput :value="item.delay" :isDisable="!isEnable" width="100%" :placeholder="`起動後遅延:秒`" />
@@ -83,6 +86,35 @@ async function prepareFileIcon() {
 }
 
 /**
+ * show full path
+ */
+let timerId = 0
+const isShowFullPath = ref(false)
+
+const copyElem = document.createElement("span")
+copyElem.setAttribute("style", "display: inline-block; visibility: hidden; position: absolute; font-family: Consolas; font-size: 15px;")
+copyElem.innerText = item.value.path
+document.body.appendChild(copyElem)
+const fullWidth = ref(copyElem.offsetWidth)
+const fullWidthStr = fullWidth.value.toString() + "px"
+
+const seePathStart = () => {
+  clearTimeout(timerId)
+  isShowFullPath.value = false
+  if (fullWidth.value <= (document.getElementById("path") as HTMLElement).offsetWidth) return
+
+  setTimeout(() => {
+    isShowFullPath.value = true
+  }, 399)
+}
+
+const seePathEnd = () => {
+  isShowFullPath.value = false
+}
+
+/* コンポーネントが破棄されるときにappendChildしたやつも破棄する */
+
+/**
  * handle events and save settings
  */
 const isEnable = ref(p.openItem.enable)
@@ -134,9 +166,17 @@ const emitEvent = (index: number) => {
     }
   }
   .path {
+    position: relative;
     flex-grow: 2.875;
     input {
       width: 100%;
+    }
+    .full_path {
+      position: absolute;
+      width: v-bind(fullWidthStr);
+      background-color: #fff;
+      box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.13);
+      z-index: 2;
     }
   }
   .delay {
