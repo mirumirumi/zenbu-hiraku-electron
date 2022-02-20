@@ -1,7 +1,7 @@
 export interface OpenItem {
   uuid:   string,
   path:   string,
-  delay:  number,
+  delay:  number|undefined,
   window: WindowType,
   enable: boolean,
 }

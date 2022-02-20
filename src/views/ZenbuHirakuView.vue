@@ -1,14 +1,14 @@
 <template>
   <div class="zenbu_hiraku_wrap">
     <div class="items_wrap">
-      <VueDraggable :list="example" item-key="uuid" :move="dragged">
-        <template #item="{ element }">
-          <OpenItemComponent :openItem="element" />
+      <VueDraggable :list="items" item-key="uuid" :move="dragged">
+        <template #item="{ element, index }">
+          <OpenItemComponent :openItem="element" :index="index" @removeSelf="removeItem" />
         </template>
       </VueDraggable>
     </div>
     <div class="add_button">
-      <button type="button" class="button" tabindex="-1">
+      <button type="button" class="button" tabindex="-1" @click="addItem">
         <SvgIcon icon="add" color="#646464" />
         <span>追加する</span>
       </button>
@@ -27,13 +27,15 @@ import SvgIcon from "@/components/parts/SvgIcon.vue"
 import OpenItemComponent from "@/components/modules/OpenItem.vue"
 
 /**
- * paging init
+ * initialize
  */
 pagingInit(router.currentRoute.value.name as string)
 
 
+/* read settings */
 
-const example = ref<Array<OpenItem>>([
+
+const items = ref<Array<OpenItem>>([
   {
     path:   "C:/Program Files\\Vivaldi\\Application/vivaldi.exe",
     delay:  3,
@@ -57,6 +59,18 @@ const example = ref<Array<OpenItem>>([
   },
 ])
 
+/**
+ * add item
+ */
+const addItem = () => {
+  items.value.push({
+    path:   "",
+    delay:  undefined,
+    window: WindowType.NO,
+    enable: true,
+    uuid:   uuidv4(),
+  })
+}
 
 /**
  * drag and drop
@@ -72,8 +86,12 @@ document.addEventListener("dragstart", (e: DragEvent) => {
   if (DRAGGABLE_AREA_MAX_X < e.clientX) e.preventDefault()
 })
 
-
-
+/**
+ * remove item
+ */
+const removeItem = (index: number) => {
+  items.value.splice(index, 1)
+}
 </script>
 
 <style lang="scss" scoped>
@@ -91,6 +109,7 @@ document.addEventListener("dragstart", (e: DragEvent) => {
     button {
       position: relative;
       padding: 0.6em 11em 0.57em;
+      font-size: 1rem;
       background-color: #f0f0f0;
       box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.13);
       transition: 0.07s ease-out;

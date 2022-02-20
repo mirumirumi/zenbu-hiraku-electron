@@ -1,6 +1,6 @@
 <template>
   <div class="number_input">
-    <input type="number" class="input" v-model="number"  @change="emitEvent(number)" :tabindex="tabindex" :placeholder="placeholder" min="0" max="999">
+    <input type="number" class="input" :class="{ 'disable': !isDisable}" v-model="number"  @change="emitEvent(number)" :tabindex="tabindex" :placeholder="placeholder" min="0" max="999">
   </div>
 </template>
 
@@ -9,11 +9,12 @@ import { ref, watch } from "vue"
 
 const p = defineProps<{
   settingName?: string,
-  value: number,
+  value?: number,
   width: string,
   textAlign?: string,
   tabindex?: number,
   placeholder?: string,
+  isDisable?: boolean,
 }>()
 
 const emit = defineEmits<{
@@ -24,14 +25,15 @@ const number = ref(p.value)
 const width = ref(p.width)
 const textAlign = ref(p.textAlign ?? "right")
 
-const emitEvent = (value: number) => {
-  if (p.settingName) {
+const emitEvent = (value: number|undefined) => {
+  if (p.settingName && value) {
     emit("delayExec", value)
     return
   }
 }
 
 watch(number, () => {
+  if (!p.settingName) return
   if (number.value as unknown as string == "") number.value = 0
 })
 </script>

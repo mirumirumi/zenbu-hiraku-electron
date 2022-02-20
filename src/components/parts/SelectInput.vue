@@ -1,6 +1,6 @@
 <template>
   <div class="select_input">
-    <button type="button" class="input select_button" @click="toggleIsSelecting()">
+    <button type="button" class="input select_button" :class="{ 'disable': !isDisable}" @click="toggleIsSelecting()">
       {{ currentItem }}
       <span class="dropdown-caret"></span>
     </button>
@@ -24,6 +24,7 @@ const p = defineProps<{
   items: Array<string>,
   current: string,
   width?: string,
+  isDisable?: boolean,
 }>()
 
 const uuid = uuidv4()
@@ -91,6 +92,7 @@ function tabindexToId(to: number, maxlength: number): string {
   width: v-bind(width);
   button {
     width: v-bind(width);
+    font-size: 12.73px;
     font-weight: 700;
     border-radius: 7px;
     .dropdown-caret {
@@ -113,7 +115,7 @@ function tabindexToId(to: number, maxlength: number): string {
     position: absolute;
     width: 100%;
     margin: 1px auto 0;
-    padding: 0.34em 0 0.37em;
+    padding: 0.34em 0 0.33em;
     max-height: 200px;
     border: solid 1.9px #c9c9c9;
     border-radius: 7px;

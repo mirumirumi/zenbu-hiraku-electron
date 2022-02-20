@@ -4,21 +4,21 @@
       <SvgIcon icon="grab" color="#c9c9c9" />
     </div>
     <div class="icon">
-      <img :src="iconDataUrl" alt="@" :class="{'disable':!isEnable}">
+      <img :src="iconDataUrl" :class="{ 'disable_image': !isEnable} ">
     </div>
     <div class="path">
-      <input type="text" class="input" :class="{'disable':!isEnable}" v-model="item.path" @input="getFileIcon" placeholder="開きたい対象の絶対パス">
+      <input type="text" class="input" :class="{ 'disable': !isEnable} " v-model="item.path" @input="getFileIcon" placeholder="開きたい対象の絶対パス">
     </div>
     <div class="delay">
-      <NumberInput :value="item.delay" :class="{'disable':!isEnable}" width="100%" :placeholder="`起動後遅延:秒`" />
+      <NumberInput :value="item.delay" :isDisable="isEnable" width="100%" :placeholder="`起動後遅延:秒`" />
     </div>
     <div class="window">
-      <SelectInput :items="[WindowType.NO, WindowType.MIN, WindowType.MAX]" :current="item.window" :class="{'disable':!isEnable}" width="100%" />
+      <SelectInput :items="[WindowType.NO, WindowType.MIN, WindowType.MAX]" :current="item.window" :isDisable="isEnable" width="100%" />
     </div>
     <div class="enable">
       <CheckButton :value="item.enable" @itemEnable="changeEnable" />
     </div>
-    <div class="remove">
+    <div class="remove" @click="emitEvent(index)">
       <SvgIcon icon="remove" color="#f4695e" />
     </div>
   </div>
@@ -31,11 +31,16 @@ import SvgIcon from "../parts/SvgIcon.vue"
 import NumberInput from "../parts/NumberInput.vue"
 import SelectInput from "../parts/SelectInput.vue"
 import CheckButton from "../parts/CheckButton.vue"
-import { folderIcon } from "@/assets/assets"
 import { OpenItem, WindowType } from "@/utils/defines"
+import { defaultIcon, folderIcon } from "@/assets/assets"
 
 const p = defineProps<{
   openItem: OpenItem,
+  index: number,
+}>()
+
+const emit = defineEmits<{
+  (e: "removeSelf", index: number): void,
 }>()
 
 /**
@@ -46,22 +51,35 @@ const iconDataUrl = ref("")
 
 // for init
 ;(async () => {
-  await getFileIconOrPrepare()
+  await prepareFileIcon()
 })()
 
 // for change input
 const getFileIcon = async () => {
-  await getFileIconOrPrepare()
+  await prepareFileIcon()
 }
 
-async function getFileIconOrPrepare() {
-  if ((!item.value.path.match(/\.[^\.]+?$/gmi)) && (!item.value.path.match(/^[a-zA-Z]:(\/|\\)?$/gmi))) {  // eslint-disable-line
+async function prepareFileIcon() {
+  if (item.value.path === "" || item.value.path.length === 1) {
+    // when path is empty or one charactor
+    iconDataUrl.value = defaultIcon
+    return
+  }
+
+  if (item.value.path.match(/^[a-zA-Z]:(\/|\\)?$/gmi)) {
+    // for drive leter
+    iconDataUrl.value = await window.electron.getFileIconPath(item.value.path)
+    return
+  }
+
+  if ((!item.value.path.match(/\.[^\.]+?$/gmi))) {  // eslint-disable-line
     // for directory icon
     iconDataUrl.value = folderIcon
-  } else {
-    // for normal applications(include *.*) and drive leter
-    iconDataUrl.value = await window.electron.getFileIconPath(item.value.path)
+    return
   }
+
+  // for normal applications(include *.*)
+  iconDataUrl.value = await window.electron.getFileIconPath(item.value.path)
 }
 
 /**
@@ -70,14 +88,11 @@ async function getFileIconOrPrepare() {
 const isEnable = ref(p.openItem.enable)
 
 const changeEnable = async (enable: boolean): Promise<void> => {
-  console.log(enable)
   isEnable.value = enable
-  // if (!isEnable.value) {
-
-  // }
-
   await saveAll()
 }
+
+
 
 
 async function saveAll(): Promise<void> {
@@ -85,6 +100,13 @@ async function saveAll(): Promise<void> {
 }
 
 
+/**
+ * remove self
+ */
+
+const emitEvent = (index: number) => {
+  emit("removeSelf", index)
+}
 </script>
 
 <style lang="scss" scoped>
@@ -132,8 +154,7 @@ async function saveAll(): Promise<void> {
     }
   }
 }
-.disable {
-  background-color: #d8d8d8;
+.disable_image {
   filter: grayscale(1);
 }
 </style>

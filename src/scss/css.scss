@@ -30,7 +30,6 @@ ul, li {
 .button {
   display: inline-block;
   padding: 0.37rem 1.1rem 0.375rem;
-  font-size: 1rem;
   font-weight: 500;
   line-height: 1.5;
   text-align: center;
@@ -95,6 +94,10 @@ ul, li {
   background-clip: padding-box;
   border-radius: 9999px;
   background-color: #d6d1c9;
+}
+
+.disable {
+  background-color: #d8d8d8;
 }
 
 /**
