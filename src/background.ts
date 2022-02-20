@@ -62,7 +62,7 @@ async function createWindow() {
     }
   })
 
-  declareElectronApis(win)
+  declareElectronApis(app, win)
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL as string)

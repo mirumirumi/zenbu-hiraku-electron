@@ -1,7 +1,12 @@
 <template>
   <div class="zenbu_hiraku_wrap">
     <div class="items_wrap">
-      <OpenItemComponent v-for="i, index in example" :openItem="i" :key="index" />
+      <!-- <OpenItemComponent v-for="i, index in example" :openItem="i" :key="index" /> -->
+      <VueDraggable :list="example" :itemKey="uuid" :move="dragged">
+        <template #item="{ element }">
+          <OpenItemComponent :openItem="element" />
+        </template>
+      </VueDraggable>
     </div>
     <div class="add_button">
       <button type="button" class="button" tabindex="-1">
@@ -15,10 +20,14 @@
 <script setup lang="ts">
 import { ref } from "vue"
 import router from "@/router/router"
+import VueDraggable from "vuedraggable"
+import { v4 as uuidv4 } from "uuid"
 import { pagingInit } from "@/utils/utils"
 import { OpenItem, WindowType } from "@/utils/defines"
 import SvgIcon from "@/components/parts/SvgIcon.vue"
 import OpenItemComponent from "@/components/modules/OpenItem.vue"
+
+const uuid = uuidv4()
 
 /**
  * paging init
@@ -48,6 +57,22 @@ const example: Array<OpenItem> = [
   },
 ]
 
+
+
+/**
+ * drag and drop
+ */
+const DRAGGABLE_AREA_MAX_X = 261
+
+const dragged = (event: any) => {  // eslint-disable-line
+  if (DRAGGABLE_AREA_MAX_X < event.originalEvent.clientX) return false
+
+}
+
+// for ghost element near the pointer hide under dragging
+document.addEventListener("dragstart", (e: DragEvent) => {
+  if (DRAGGABLE_AREA_MAX_X < e.clientX) e.preventDefault()
+})
 
 
 

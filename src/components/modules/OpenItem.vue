@@ -4,10 +4,10 @@
       <SvgIcon icon="grab" color="#c9c9c9" />
     </div>
     <div class="icon">
-      <img src="@/assets/icon.png" style="height: 20px;">
+      <img :src="iconDataUrl" style="width: 20px; height: 20px;">
     </div>
     <div class="path">
-      <input type="text" class="input" v-model="item.path" placeholder="ファイルやアプリケーションの絶対パス">
+      <input type="text" class="input" v-model="item.path" @input="getFileIcon" placeholder="ファイルやアプリケーションの絶対パス">
     </div>
     <div class="delay">
       <NumberInput :value="item.delay" width="100%" :placeholder="`起動後遅延:秒`" />
@@ -31,6 +31,7 @@ import SvgIcon from "../parts/SvgIcon.vue"
 import NumberInput from "../parts/NumberInput.vue"
 import SelectInput from "../parts/SelectInput.vue"
 import CheckButton from "../parts/CheckButton.vue"
+import { folderIcon } from "@/assets/assets"
 import { OpenItem, WindowType } from "@/utils/defines"
 
 const p = defineProps<{
@@ -41,8 +42,25 @@ const p = defineProps<{
  * set item
  */
 const item = ref(p.openItem)
+const iconDataUrl = ref("")
 
+;(async () => {
+  await getFileIconOrPrepare()
+})()
 
+const getFileIcon = async () => {
+  await getFileIconOrPrepare()
+}
+
+async function getFileIconOrPrepare() {
+  if ((!item.value.path.match(/\.[^\.]+?$/gmi)) && (!item.value.path.match(/^[a-zA-Z]:(\/|\\)?$/gmi))) {  // eslint-disable-line
+    // for directory icon
+    iconDataUrl.value = folderIcon
+  } else {
+    // normal applications(include *.*) and drive leter
+    iconDataUrl.value = await window.electron.getFileIconPath(item.value.path)
+  }
+}
 
 /**
  * save settings
@@ -51,7 +69,7 @@ const item = ref(p.openItem)
 
 
 const changeEnable = (enable: boolean): void => {
-  // item.value.enable = enable
+  1
 }
 
 
