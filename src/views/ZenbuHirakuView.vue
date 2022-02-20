@@ -66,7 +66,7 @@ const addItem = () => {
   items.value.push({
     path:   "",
     delay:  undefined,
-    window: WindowType.NO,
+    window: "ウィンドウ",
     enable: true,
     uuid:   uuidv4(),
   })
@@ -105,7 +105,7 @@ const removeItem = (index: number) => {
     padding-top: 20px;
   }
   .add_button {
-    margin: 20px auto 100px;
+    margin: 35px auto 100px;
     text-align: center;
     button {
       position: relative;

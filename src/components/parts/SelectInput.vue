@@ -1,6 +1,6 @@
 <template>
   <div class="select_input">
-    <button type="button" class="input select_button" :class="{ 'disable': isDisable}" @click="toggleIsSelecting()">
+    <button type="button" class="input select_button" :class="{ 'disable': isDisable, 'placeholder': isWindow }" @click="toggleIsSelecting()">
       {{ currentItem }}
       <span class="dropdown-caret"></span>
     </button>
@@ -16,7 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
+import { ref, watch } from "vue"
 import { v4 as uuidv4 } from "uuid"
 import TransparentBack from "../modules/TransparentBack.vue"
 
@@ -84,6 +84,16 @@ function tabindexToId(to: number, maxlength: number): string {
   }
   return result
 }
+
+/**
+ * hmmmmmm...
+ */
+const isWindow = ref(false)
+if (currentItem.value === "ウィンドウ") isWindow.value = true
+watch(currentItem, () => {
+  if (currentItem.value === "ウィンドウ") isWindow.value = true
+  else isWindow.value = false
+})
 </script>
 
 <style lang="scss" scoped>
@@ -145,5 +155,8 @@ function tabindexToId(to: number, maxlength: number): string {
       max-height: 180px;
     }
   }
+}
+.placeholder {
+  color: #d2d2d2;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="number_input">
-    <input type="number" class="input" :class="{ 'disable': isDisable}" v-model="number"  @change="emitEvent(number)" :tabindex="tabindex" :placeholder="placeholder" min="0" max="999">
+    <input type="number" class="input" :class="{ 'disable': isDisable }" v-model="number"  @change="emitEvent(number)" :tabindex="tabindex" :placeholder="placeholder" min="0" max="999">
   </div>
 </template>
 
