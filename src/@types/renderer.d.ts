@@ -1,5 +1,3 @@
-import { NativeImage } from "electron"
-
 declare global {
   interface Window {
     electron: ElectronApi

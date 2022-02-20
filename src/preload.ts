@@ -1,5 +1,4 @@
 const { ipcRenderer, contextBridge } = require("electron")
-import { NativeImage } from "electron"
 
 contextBridge.exposeInMainWorld("electron", {
   minimizeWindow: () => ipcRenderer.invoke("minimizeWindow"),

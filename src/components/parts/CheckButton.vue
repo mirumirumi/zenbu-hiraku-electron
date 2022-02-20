@@ -26,11 +26,11 @@ const emit = defineEmits<{
 
 const emitEvent = (value: boolean) => {
   if (p.settingName) {
-    emit("itemEnable",             !value)
     emit("isStartAtWindows",       !value)
     emit("isExecAtStartApp",       !value)
     emit("isConfirmAutoUpdateApp", !value)
-    return
+  } else {
+    emit("itemEnable", !value)
   }
 }
 </script>

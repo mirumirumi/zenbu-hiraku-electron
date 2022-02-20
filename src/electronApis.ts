@@ -1,4 +1,4 @@
-import { App, BrowserWindow, NativeImage } from "electron"
+import { App, BrowserWindow } from "electron"
 import { IpcMainInvokeEvent } from "electron/main"
 
 const { ipcMain } = require("electron")

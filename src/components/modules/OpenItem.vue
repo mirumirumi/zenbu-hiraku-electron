@@ -4,16 +4,16 @@
       <SvgIcon icon="grab" color="#c9c9c9" />
     </div>
     <div class="icon">
-      <img :src="iconDataUrl" style="width: 20px; height: 20px;">
+      <img :src="iconDataUrl" alt="@" :class="{'disable':!isEnable}">
     </div>
     <div class="path">
-      <input type="text" class="input" v-model="item.path" @input="getFileIcon" placeholder="ファイルやアプリケーションの絶対パス">
+      <input type="text" class="input" :class="{'disable':!isEnable}" v-model="item.path" @input="getFileIcon" placeholder="開きたい対象の絶対パス">
     </div>
     <div class="delay">
-      <NumberInput :value="item.delay" width="100%" :placeholder="`起動後遅延:秒`" />
+      <NumberInput :value="item.delay" :class="{'disable':!isEnable}" width="100%" :placeholder="`起動後遅延:秒`" />
     </div>
     <div class="window">
-      <SelectInput :items="[WindowType.NO, WindowType.MIN, WindowType.MAX]" :current="item.window" width="100%" />
+      <SelectInput :items="[WindowType.NO, WindowType.MIN, WindowType.MAX]" :current="item.window" :class="{'disable':!isEnable}" width="100%" />
     </div>
     <div class="enable">
       <CheckButton :value="item.enable" @itemEnable="changeEnable" />
@@ -44,10 +44,12 @@ const p = defineProps<{
 const item = ref(p.openItem)
 const iconDataUrl = ref("")
 
+// for init
 ;(async () => {
   await getFileIconOrPrepare()
 })()
 
+// for change input
 const getFileIcon = async () => {
   await getFileIconOrPrepare()
 }
@@ -57,21 +59,30 @@ async function getFileIconOrPrepare() {
     // for directory icon
     iconDataUrl.value = folderIcon
   } else {
-    // normal applications(include *.*) and drive leter
+    // for normal applications(include *.*) and drive leter
     iconDataUrl.value = await window.electron.getFileIconPath(item.value.path)
   }
 }
 
 /**
- * save settings
+ * handle events and save settings
  */
+const isEnable = ref(p.openItem.enable)
 
+const changeEnable = async (enable: boolean): Promise<void> => {
+  console.log(enable)
+  isEnable.value = enable
+  // if (!isEnable.value) {
 
+  // }
 
-const changeEnable = (enable: boolean): void => {
-  1
+  await saveAll()
 }
 
+
+async function saveAll(): Promise<void> {
+  1
+}
 
 
 </script>
@@ -95,7 +106,10 @@ const changeEnable = (enable: boolean): void => {
     }
   }
   .icon {
-
+    img {
+      width: 20px;
+      height: 20px;
+    }
   }
   .path {
     flex-grow: 2.875;
@@ -109,9 +123,6 @@ const changeEnable = (enable: boolean): void => {
   .window {
     width: 111px;
   }
-  .enable {
-
-  }
   .remove {
     position: relative;
     width: 1em;
@@ -120,5 +131,9 @@ const changeEnable = (enable: boolean): void => {
       width: 1em;
     }
   }
+}
+.disable {
+  background-color: #d8d8d8;
+  filter: grayscale(1);
 }
 </style>

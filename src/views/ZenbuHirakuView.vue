@@ -1,7 +1,7 @@
 <template>
   <div class="zenbu_hiraku_wrap">
     <div class="items_wrap">
-      <VueDraggable :list="example" item-key="uuid" :move="dragged" tag="transition-gruoup">
+      <VueDraggable :list="example" item-key="uuid" :move="dragged">
         <template #item="{ element }">
           <OpenItemComponent :openItem="element" />
         </template>
