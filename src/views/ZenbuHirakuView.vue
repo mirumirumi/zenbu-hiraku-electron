@@ -32,38 +32,43 @@ import OpenItemComponent from "@/components/modules/OpenItem.vue"
  */
 pagingInit(router.currentRoute.value.name as string)
 
+const items = ref<Array<OpenItem>>()
 
-/* read settings */
-
-
-const items = ref<Array<OpenItem>>([
-  {
-    path:   "C:/Program Files\\Vivaldi\\Application/vivaldi.exe",
-    delay:  3,
-    window: WindowType.MAX,
-    enable: true,
-    uuid:   uuidv4(),
-  },
-  {
-    path:   "C:/Users/owner/Downloads",
-    delay:  5,
-    window: WindowType.MAX,
-    enable: false,
-    uuid:   uuidv4(),
-  },
-  {
-    path:   "C:\\Users\\owner\\AppData\\Local\\Programs\\Microsoft VS Code\\Code.exe",
-    delay:  1,
-    window: WindowType.MIN,
-    enable: true,
-    uuid:   uuidv4(),
-  },
-])
+;(async () => {
+  if (await localForage.getItem("OpenItems")) {
+    items.value = await localForage.getItem("OpenItems") as unknown as Array<OpenItem>
+  } else {
+    items.value = [
+      {
+        path:   "C:\\Users",
+        delay:  3,
+        window: WindowType.NO,
+        enable: true,
+        uuid:   uuidv4(),
+      },
+      {
+        path:   "C:\\Windows\\System32\\notepad.exe",
+        delay:  11,
+        window: WindowType.MIN,
+        enable: true,
+        uuid:   uuidv4(),
+      },
+      {
+        path:   "https://mirumi.me/apps/zh",
+        delay:  13,
+        window: WindowType.MAX,
+        enable: true,
+        uuid:   uuidv4(),
+      },
+    ]
+  }
+})()
 
 /**
  * add item
  */
 const addItem = () => {
+  if (!items.value) return
   items.value.push({
     path:   "",
     delay:  undefined,
@@ -77,6 +82,8 @@ const addItem = () => {
  * save settings
  */
 async function saveAll(item: OpenItem, index: number): Promise<void> {
+  if (!items.value) return
+
   items.value[index] = item
 
   /* If I try to save it as is, I get a `DOMException: Failed to execute 'put' on 'IDBObjectStore': [object Array] could not be cloned.` error.
@@ -107,6 +114,8 @@ const dragged = async () => {
  * remove item
  */
 const removeItem = (index: number) => {
+  if (!items.value) return
+
   items.value.splice(index, 1)
 }
 </script>
