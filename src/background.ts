@@ -1,4 +1,4 @@
-import { app, protocol, BrowserWindow, Tray, Menu, nativeImage } from "electron"
+import { app, protocol, BrowserWindow, Tray, Menu, nativeImage, dialog } from "electron"
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib"
 import installExtension, { VUEJS3_DEVTOOLS } from "electron-devtools-installer"
 import { declareElectronApis } from "./electronApis"
@@ -100,6 +100,20 @@ app.on("ready", async () => {
       console.error("Vue Devtools failed to install:", e.toString())
     }
   }
+
+  try {
+    const isNotYetAppLaunch = app.requestSingleInstanceLock()
+    if (!isNotYetAppLaunch) {
+      console.log("🍊 Already running app! 🍊")
+      dialog.showMessageBoxSync({ message: "「ぜんぶひらく」は既に起動しています。二重起動はできません。" })
+      app.quit()
+      return
+    }
+  } catch (e: any) {  //eslint-disable-line
+    console.log(e)
+    return
+  }
+
   createWindow()
 })
 
