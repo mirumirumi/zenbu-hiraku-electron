@@ -8,7 +8,7 @@
         <div class="setting_ui">
           <CheckButton settingName="isStartAtWindows" @isStartAtWindows="changeStartAtWindows" :value="isStartAtWindows" />
         </div>
-        <SaveSucceeded v-if="isChangeSettingNowStartAtWindows" />
+        <SaveSucceeded v-if="isChangeSettingNowStartAtWindows" :enable="isExecAtStartApp" />
       </div>
       <div class="setting_item">
         <div class="setting_description">
@@ -17,7 +17,7 @@
         <div class="setting_ui">
           <CheckButton settingName="isExecAtStartApp" @isExecAtStartApp="changeExecAtStartApp" :value="isExecAtStartApp" />
         </div>
-        <SaveSucceeded v-if="isChangeSettingNowExecAtStartApp" />
+        <!-- <SaveSucceeded v-if="isChangeSettingNowExecAtStartApp" /> -->
       </div>
       <div class="setting_item">
         <div class="setting_description">
@@ -26,7 +26,7 @@
         <div class="setting_ui">
           <NumberInput settingName="delayExec" @delayExec="changeDelayExec" :value="delayExec" width="80px" :tabindex="-1" />
         </div>
-        <SaveSucceeded v-if="isChangeSettingDelayExec" />
+        <!-- <SaveSucceeded v-if="isChangeSettingDelayExec" /> -->
       </div>
     </div>
     <div class="group">
@@ -37,7 +37,7 @@
         <div class="setting_ui">
           <CheckButton settingName="isConfirmAutoUpdateApp" @isConfirmAutoUpdateApp="changeConfirmAutoUpdateApp" :value="isConfirmAutoUpdateApp" />
         </div>
-        <SaveSucceeded v-if="isChangeSettingNowConfirmAutoUpdateApp" />
+        <!-- <SaveSucceeded v-if="isChangeSettingNowConfirmAutoUpdateApp" /> -->
       </div>
     </div>
   </div>
@@ -59,15 +59,16 @@ pagingInit(router.currentRoute.value.name as string)
 /**
  * setting read
  */
-const isStartAtWindows =       ref(true)
-const isExecAtStartApp =       ref(true)
+const isStartAtWindows =       ref(false)
+const isExecAtStartApp =       ref(false)
 const delayExec =              ref(10)
 const isConfirmAutoUpdateApp = ref(true)
 
 onBeforeMount(() => {
-  isStartAtWindows.value =       toBool(localStorage.getItem("isStartAtWindows")       ?? "true")
-  isExecAtStartApp.value =       toBool(localStorage.getItem("isExecAtStartApp")       ?? "true")
-  delayExec.value =              parseInt(localStorage.getItem("delayExec") ?? "10")
+  // there are at the first startup
+  isStartAtWindows.value =       toBool(localStorage.getItem("isStartAtWindows")       ?? "false")
+  isExecAtStartApp.value =       toBool(localStorage.getItem("isExecAtStartApp")       ?? "false")
+  delayExec.value =              parseInt(localStorage.getItem("delayExec")            ?? "10")
   isConfirmAutoUpdateApp.value = toBool(localStorage.getItem("isConfirmAutoUpdateApp") ?? "true")
 })
 
@@ -85,6 +86,8 @@ let timerIdDelayExec = 0
 let timerIdConfirmAutoUpdateApp = 0
 
 const changeStartAtWindows = async (result: boolean): Promise<void> => {
+  isExecAtStartApp.value = result
+  window.electron.registerStartup(result)
   localStorage.setItem("isStartAtWindows", result.toString())
 
   if (isChangeSettingNowStartAtWindows.value) {
@@ -94,7 +97,7 @@ const changeStartAtWindows = async (result: boolean): Promise<void> => {
   isChangeSettingNowStartAtWindows.value = true
   
   clearTimeout(timerIdStartAtWindows)
-  timerIdStartAtWindows = window.setTimeout(() => { isChangeSettingNowStartAtWindows.value = false }, 1111)
+  timerIdStartAtWindows = window.setTimeout(() => { isChangeSettingNowStartAtWindows.value = false }, 1333)
 }
 
 const changeExecAtStartApp = async (result: boolean): Promise<void> => {

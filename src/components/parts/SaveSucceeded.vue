@@ -1,10 +1,14 @@
 <template>
   <div class="save_succeeded">
-    <span>保存しました</span>
+    <!-- <span>保存しました</span> -->
+    <span>{{ enable ? 'スタートアップに登録しました' : 'スタートアップから削除しました' }}</span>
   </div>
 </template>
 
 <script setup lang="ts">
+defineProps<{
+  enable: boolean,
+}>()
 </script>
 
 <style lang="scss" scoped>

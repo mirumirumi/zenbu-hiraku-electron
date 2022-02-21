@@ -15,4 +15,10 @@ export const declareElectronApis = (app: App, win: BrowserWindow): void => {
   ipcMain.handle("getFileIconPath", async (e: IpcMainInvokeEvent, path: string): Promise<string> => {
     return (await app.getFileIcon(path, { size: "normal" })).toDataURL()
   })
+
+  ipcMain.handle("registerStartup", (e: IpcMainInvokeEvent, isOpenAtLogin: boolean) => {
+    app.setLoginItemSettings({
+      openAtLogin: isOpenAtLogin,
+    })
+  })
 }
