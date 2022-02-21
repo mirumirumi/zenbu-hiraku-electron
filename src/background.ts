@@ -26,7 +26,6 @@ app.whenReady().then(() => {
 
   const contextMenu = Menu.buildFromTemplate([
     { label: "「ぜんぶひらく」を実行", type: "normal" },
-    { label: "「ぜんぶとじる」を実行", type: "normal" },
     { label: "設定", type: "normal", click: () => { win.show() } },
     { label: "終了", role: "quit" },
   ])
