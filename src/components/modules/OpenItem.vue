@@ -92,27 +92,27 @@ let timerId = 0
 const isShowFullPath = ref(false)
 
 const copyElem = document.createElement("span")
-copyElem.setAttribute("style", "display: inline-block; visibility: hidden; position: absolute; font-family: Consolas; font-size: 15px;")
-copyElem.innerText = item.value.path
-document.body.appendChild(copyElem)
+  copyElem.setAttribute("style", "display: inline-block; visibility: hidden; position: absolute; font-family: Consolas; font-size: 15px;")
+  copyElem.innerText = item.value.path
+  document.body.appendChild(copyElem)
 const fullWidth = ref(copyElem.offsetWidth)
 const fullWidthStr = fullWidth.value.toString() + "px"
 
 const seePathStart = () => {
-  clearTimeout(timerId)
-  isShowFullPath.value = false
-  if (fullWidth.value <= (document.getElementById("path") as HTMLElement).offsetWidth) return
+  const originWidth = (document.getElementById("path") as HTMLElement).offsetWidth
+  if (fullWidth.value <= originWidth) return
 
-  setTimeout(() => {
+  isShowFullPath.value = false
+
+  timerId = window.setTimeout(() => {
     isShowFullPath.value = true
   }, 399)
 }
 
 const seePathEnd = () => {
+  clearTimeout(timerId)
   isShowFullPath.value = false
 }
-
-/* コンポーネントが破棄されるときにappendChildしたやつも破棄する */
 
 /**
  * handle events and save settings
@@ -174,7 +174,7 @@ const emitEvent = (index: number) => {
     .full_path {
       position: absolute;
       width: v-bind(fullWidthStr);
-      background-color: #fff;
+      background-color: #fffcf9;
       box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.13);
       z-index: 2;
     }
