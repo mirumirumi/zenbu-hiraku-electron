@@ -3,7 +3,7 @@
     <div class="items_wrap">
       <VueDraggable :list="items" item-key="uuid" :move="drag" @end="dragged">
         <template #item="{ element, index }">
-          <OpenItemComponent :openItem="element" :index="index" @saveAll="saveAllFromEmits" @removeSelf="removeItem" />
+          <OpenItemComponent :openItem="element" :index="index" @saveAll="saveAllFromEmits" @removeSelf="removeItem" :isOneItem="isOneItem" />
         </template>
       </VueDraggable>
     </div>
@@ -70,7 +70,11 @@ const items = ref<Array<OpenItem>>()
  */
 const addItem = async () => {
   if (!items.value) return
+
+  draftItem.uuid = uuidv4()
   items.value.push(JSON.parse(JSON.stringify(draftItem)))  // deep copy
+
+  isOneItem.value = false
 
   await saveAll()
 }
@@ -113,10 +117,16 @@ const dragged = async () => {
 /**
  * remove item
  */
+const isOneItem = ref(false)
+
 const removeItem = async (index: number) => {
   if (!items.value) return
 
+  if (isOneItem.value) return
+
   items.value.splice(index, 1)
+  if (items.value.length === 1) isOneItem.value = true
+
   await saveAll()
 }
 </script>

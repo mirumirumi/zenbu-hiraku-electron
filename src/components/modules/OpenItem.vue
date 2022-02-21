@@ -22,7 +22,7 @@
       <CheckButton :value="item.enable" @itemEnable="changeEnable" />
     </div>
     <div class="remove" @click="emitRemove(index)">
-      <SvgIcon icon="remove" color="#f4695e" />
+      <SvgIcon icon="remove" :color="isOneItem ? '#d2d2d2' : '#f4695e'" :class="{ 'cant_remove': isOneItem }" />
     </div>
   </div>
 </template>
@@ -39,6 +39,7 @@ import { browserIcon, defaultIcon, folderIcon } from "@/assets/assets"
 const p = defineProps<{
   openItem: OpenItem,
   index: number,
+  isOneItem: boolean,
 }>()
 
 const emit = defineEmits<{
@@ -236,5 +237,8 @@ const wantToEditPath = () => {
 }
 .disable_image {
   filter: grayscale(1);
+}
+.cant_remove {
+  cursor: not-allowed;
 }
 </style>

@@ -1,5 +1,3 @@
-import { v4 as uuidv4 } from "uuid"
-
 export interface OpenItem {
   uuid:   string,
   path:   string,
@@ -19,5 +17,5 @@ export const draftItem: OpenItem = {
   delay:  undefined,
   window: "ウィンドウ",
   enable: true,
-  uuid:   uuidv4(),
+  uuid:   "",
 }
