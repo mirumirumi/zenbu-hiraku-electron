@@ -27,6 +27,10 @@ const p = defineProps<{
   isDisable?: boolean,
 }>()
 
+const emit = defineEmits<{
+  (e: "changeValue", value: string): void,
+}>()
+
 const uuid = uuidv4()
 const isSelecting = ref(false)
 const currentItem = ref(p.current)
@@ -66,6 +70,7 @@ const selectWithKeys = (e: KeyboardEvent, item: string): void => {
 
 const decideSelect = (item: string): void => {
   currentItem.value = item
+  emit("changeValue", currentItem.value)
   closeSelections()
 }
 

@@ -19,6 +19,7 @@
 <script setup lang="ts">
 import { ref } from "vue"
 import router from "@/router/router"
+import localForage from "localforage"
 import VueDraggable from "vuedraggable"
 import { v4 as uuidv4 } from "uuid"
 import { pagingInit } from "@/utils/utils"
@@ -71,6 +72,14 @@ const addItem = () => {
     uuid:   uuidv4(),
   })
 }
+
+/**
+ * save settings
+ */
+async function saveAll(): Promise<void> {
+  1
+}
+
 
 /**
  * drag and drop

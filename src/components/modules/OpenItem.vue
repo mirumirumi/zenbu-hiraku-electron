@@ -4,24 +4,24 @@
       <SvgIcon icon="grab" color="#c9c9c9" />
     </div>
     <div class="icon">
-      <img :src="iconDataUrl" :class="{ 'disable_image': !isEnable} ">
+      <img :src="iconDataUrl" :class="{ 'disable_image': !isEnable }">
     </div>
     <div class="path" @mouseenter="seePathStart" @mouseleave="seePathEnd">
-      <input type="text" class="input" :class="{'disable': !isEnable}" v-model="item.path" @input="getFileIcon" placeholder="開きたい対象の絶対パス" id="path">
+      <input type="text" class="input" :class=" {'disable': !isEnable} " v-model="item.path" @input="getFileIcon" @change="emitSave(item.path)" @focus="isWantToEditting = true" placeholder="開きたい対象の絶対パス" :id="item.uuid">
       <transition name="fade">
-        <input v-if="isShowFullPath" type="text" class="input full_path" :class="{ 'disable': !isEnable} " v-model="item.path">
+        <input v-if="isShowFullPath" type="text" class="input full_path" :class="{ 'disable': !isEnable }" v-model="item.path" @click="wantToEditPath">
       </transition>
     </div>
     <div class="delay">
-      <NumberInput :value="item.delay" :isDisable="!isEnable" width="100%" :placeholder="`起動後遅延:秒`" />
+      <NumberInput :value="item.delay" :isDisable="!isEnable" width="100%" :placeholder="`起動後遅延:秒`" @changeValue="emitSave" />
     </div>
     <div class="window">
-      <SelectInput :items="[WindowType.NO, WindowType.MIN, WindowType.MAX]" :current="item.window" :isDisable="!isEnable" width="100%" />
+      <SelectInput :items="[WindowType.NO, WindowType.MIN, WindowType.MAX]" :current="item.window" :isDisable="!isEnable" width="100%" @changeValue="emitSave" />
     </div>
     <div class="enable">
       <CheckButton :value="item.enable" @itemEnable="changeEnable" />
     </div>
-    <div class="remove" @click="emitEvent(index)">
+    <div class="remove" @click="emitRemove(index)">
       <SvgIcon icon="remove" color="#f4695e" />
     </div>
   </div>
@@ -29,7 +29,6 @@
 
 <script setup lang="ts">
 import { ref } from "vue"
-import localForage from "localforage"
 import SvgIcon from "../parts/SvgIcon.vue"
 import NumberInput from "../parts/NumberInput.vue"
 import SelectInput from "../parts/SelectInput.vue"
@@ -44,6 +43,7 @@ const p = defineProps<{
 
 const emit = defineEmits<{
   (e: "removeSelf", index: number): void,
+  (e: "saveAll"): void,
 }>()
 
 /**
@@ -99,45 +99,50 @@ const fullWidth = ref(copyElem.offsetWidth)
 const fullWidthStr = fullWidth.value.toString() + "px"
 
 const seePathStart = () => {
-  const originWidth = (document.getElementById("path") as HTMLElement).offsetWidth
+  const originWidth = (document.getElementById(item.value.uuid) as HTMLElement).offsetWidth
   if (fullWidth.value <= originWidth) return
+
+  if (document.activeElement?.id === item.value.uuid) return
 
   isShowFullPath.value = false
 
   timerId = window.setTimeout(() => {
+    if (isWantToEditting.value) return
     isShowFullPath.value = true
-  }, 399)
+  }, 555)
 }
 
 const seePathEnd = () => {
   clearTimeout(timerId)
   isShowFullPath.value = false
+  isWantToEditting.value = false
+}
+
+const isWantToEditting = ref(false)
+
+const wantToEditPath = () => {
+  isWantToEditting.value = true
+  isShowFullPath.value = false
+  setTimeout(() => { (document.getElementById(item.value.uuid) as HTMLInputElement).focus() }, 1)
 }
 
 /**
- * handle events and save settings
+ * handle events and emit them
  */
-const isEnable = ref(p.openItem.enable)
+const isEnable = ref(item.value.enable)
 
-const changeEnable = async (enable: boolean): Promise<void> => {
+const changeEnable = (enable: boolean) => {
   isEnable.value = enable
-  await saveAll()
+  emitSave(isEnable.value)
 }
 
-
-
-
-async function saveAll(): Promise<void> {
-  1
-}
-
-
-/**
- * remove self
- */
-
-const emitEvent = (index: number) => {
+const emitRemove = (index: number) => {
   emit("removeSelf", index)
+}
+
+const emitSave = (data: string|number|boolean) => {
+  console.log(data)
+  emit("saveAll")
 }
 </script>
 
@@ -177,6 +182,10 @@ const emitEvent = (index: number) => {
       background-color: #fffcf9;
       box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.13);
       z-index: 2;
+      &:focus {
+        border: solid 1.9px #c9c9c9;
+        box-shadow: none;
+      }
     }
   }
   .delay {

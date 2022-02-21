@@ -18,7 +18,8 @@ const p = defineProps<{
 }>()
 
 const emit = defineEmits<{
-  (e: "delayExec", value: number): void,
+  (e: "delayExec",   value: number): void,
+  (e: "changeValue", value: number): void,
 }>()
 
 const number = ref(p.value)
@@ -28,7 +29,8 @@ const textAlign = ref(p.textAlign ?? "right")
 const emitEvent = (value: number|undefined) => {
   if (p.settingName && value) {
     emit("delayExec", value)
-    return
+  } else if (value) {
+    emit("changeValue", value)
   }
 }
 
