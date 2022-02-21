@@ -7,7 +7,7 @@
       <img :src="iconDataUrl" :class="{ 'disable_image': !isEnable }">
     </div>
     <div class="path" @mouseenter="seePathStart" @mouseleave="seePathEnd">
-      <input type="text" class="input" :class=" {'disable': !isEnable} " v-model="item.path" @input="getFileIcon" @change="changePath(item.path)" @focus="isWantToEditting = true" placeholder="開きたい対象の絶対パス" :id="item.uuid">
+      <input type="text" class="input" :class=" {'disable': !isEnable } " v-model="item.path" @input="getFileIcon" @change="changePath(item.path)" @focus="isWantToEditting = true" placeholder="開きたい対象の絶対パスやURL" :id="item.uuid">
       <transition name="fade">
         <input v-if="isShowFullPath" type="text" class="input full_path" :class="{ 'disable': !isEnable }" v-model="item.path" @click="wantToEditPath">
       </transition>
@@ -34,7 +34,7 @@ import NumberInput from "../parts/NumberInput.vue"
 import SelectInput from "../parts/SelectInput.vue"
 import CheckButton from "../parts/CheckButton.vue"
 import { OpenItem, WindowType } from "@/utils/defines"
-import { defaultIcon, folderIcon } from "@/assets/assets"
+import { browserIcon, defaultIcon, folderIcon } from "@/assets/assets"
 
 const p = defineProps<{
   openItem: OpenItem,
@@ -63,6 +63,9 @@ const getFileIcon = async () => {
 }
 
 async function prepareFileIcon() {
+
+  /* 最初と最後に " があるときはないものとしてあげる */
+
   if (item.value.path === "" || item.value.path.length === 1) {
     // when path is empty or one charactor
     iconDataUrl.value = defaultIcon
@@ -75,14 +78,25 @@ async function prepareFileIcon() {
     return
   }
 
-  if ((!item.value.path.match(/\.[^\.]+?$/gmi))) {  // eslint-disable-line
-    // for directory icon
-    iconDataUrl.value = folderIcon
+  if (item.value.path.match(/^[a-zA-Z]:(\/|\\)?/gmi)) {
+    if (item.value.path.match(/(\/|\\)[^\.]+\.[^\.]+?$/gmi)) {  // eslint-disable-line
+      // for normal applications(include *.*)
+      iconDataUrl.value = await window.electron.getFileIconPath(item.value.path)
+      return
+    } else {
+      // for like directory
+      iconDataUrl.value = folderIcon
+      return
+    }
+  }
+
+  if ((item.value.path.match(/^https?:/gmi)) || (item.value.path.match(/^(https?:\/\/)?.*?\..*?.+/gmi))) {
+    // for url
+    iconDataUrl.value = browserIcon
     return
   }
 
-  // for normal applications(include *.*)
-  iconDataUrl.value = await window.electron.getFileIconPath(item.value.path)
+  iconDataUrl.value = defaultIcon
 }
 
 /**
