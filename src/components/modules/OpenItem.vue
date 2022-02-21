@@ -7,16 +7,16 @@
       <img :src="iconDataUrl" :class="{ 'disable_image': !isEnable }">
     </div>
     <div class="path" @mouseenter="seePathStart" @mouseleave="seePathEnd">
-      <input type="text" class="input" :class=" {'disable': !isEnable} " v-model="item.path" @input="getFileIcon" @change="emitSave(item.path)" @focus="isWantToEditting = true" placeholder="開きたい対象の絶対パス" :id="item.uuid">
+      <input type="text" class="input" :class=" {'disable': !isEnable} " v-model="item.path" @input="getFileIcon" @change="changePath(item.path)" @focus="isWantToEditting = true" placeholder="開きたい対象の絶対パス" :id="item.uuid">
       <transition name="fade">
         <input v-if="isShowFullPath" type="text" class="input full_path" :class="{ 'disable': !isEnable }" v-model="item.path" @click="wantToEditPath">
       </transition>
     </div>
     <div class="delay">
-      <NumberInput :value="item.delay" :isDisable="!isEnable" width="100%" :placeholder="`起動後遅延:秒`" @changeValue="emitSave" />
+      <NumberInput :value="item.delay" :isDisable="!isEnable" width="100%" :placeholder="`起動後遅延:秒`" @changeValue="changeDelay" />
     </div>
     <div class="window">
-      <SelectInput :items="[WindowType.NO, WindowType.MIN, WindowType.MAX]" :current="item.window" :isDisable="!isEnable" width="100%" @changeValue="emitSave" />
+      <SelectInput :items="[WindowType.NO, WindowType.MIN, WindowType.MAX]" :current="item.window" :isDisable="!isEnable" width="100%" @changeValue="changeWindow" />
     </div>
     <div class="enable">
       <CheckButton :value="item.enable" @itemEnable="changeEnable" />
@@ -43,7 +43,7 @@ const p = defineProps<{
 
 const emit = defineEmits<{
   (e: "removeSelf", index: number): void,
-  (e: "saveAll"): void,
+  (e: "saveAll", item: OpenItem, index: number): void,
 }>()
 
 /**
@@ -86,6 +86,40 @@ async function prepareFileIcon() {
 }
 
 /**
+ * handle events and emit them
+ */
+const isEnable = ref(item.value.enable)
+
+const changePath = (path: string) => {
+  item.value.path = path
+  emitItemData()
+}
+
+const changeDelay = (delay: number) => {
+  item.value.delay = delay
+  emitItemData()
+}
+
+const changeWindow = (window: string) => {
+  item.value.window = window as WindowType
+  emitItemData()
+}
+
+const changeEnable = (enable: boolean) => {
+  item.value.enable = enable
+  isEnable.value = enable
+  emitItemData()
+}
+
+const emitRemove = (index: number) => {
+  emit("removeSelf", index)
+}
+
+const emitItemData = () => {
+  emit("saveAll", item.value, p.index)
+}
+
+/**
  * show full path
  */
 let timerId = 0
@@ -124,25 +158,6 @@ const wantToEditPath = () => {
   isWantToEditting.value = true
   isShowFullPath.value = false
   setTimeout(() => { (document.getElementById(item.value.uuid) as HTMLInputElement).focus() }, 1)
-}
-
-/**
- * handle events and emit them
- */
-const isEnable = ref(item.value.enable)
-
-const changeEnable = (enable: boolean) => {
-  isEnable.value = enable
-  emitSave(isEnable.value)
-}
-
-const emitRemove = (index: number) => {
-  emit("removeSelf", index)
-}
-
-const emitSave = (data: string|number|boolean) => {
-  console.log(data)
-  emit("saveAll")
 }
 </script>
 

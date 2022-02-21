@@ -1,9 +1,9 @@
 <template>
   <div class="zenbu_hiraku_wrap" id="zh">
     <div class="items_wrap">
-      <VueDraggable :list="items" item-key="uuid" :move="dragged">
+      <VueDraggable :list="items" item-key="uuid" :move="drag" @end="dragged">
         <template #item="{ element, index }">
-          <OpenItemComponent :openItem="element" :index="index" @removeSelf="removeItem" />
+          <OpenItemComponent :openItem="element" :index="index" @saveAll="saveAll" @removeSelf="removeItem" />
         </template>
       </VueDraggable>
     </div>
@@ -76,17 +76,21 @@ const addItem = () => {
 /**
  * save settings
  */
-async function saveAll(): Promise<void> {
-  1
-}
+async function saveAll(item: OpenItem, index: number): Promise<void> {
+  items.value[index] = item
 
+  /* If I try to save it as is, I get a `DOMException: Failed to execute 'put' on 'IDBObjectStore': [object Array] could not be cloned.` error.
+  Is it because it is a Vue ref object or a Proxy object?
+  At any rate, there is no missing data when parsing JSON this time, so this workaround solved the problem. */
+  await localForage.setItem("OpenItems", JSON.parse(JSON.stringify(items.value)))
+}
 
 /**
  * drag and drop
  */
 const DRAGGABLE_AREA_MAX_X = 261
 
-const dragged = (e: any) => {  // eslint-disable-line
+const drag = (e: any) => {  // eslint-disable-line
   if (DRAGGABLE_AREA_MAX_X < e.originalEvent.clientX) return false
 }
 
@@ -94,6 +98,10 @@ const dragged = (e: any) => {  // eslint-disable-line
 document.addEventListener("dragstart", (e: DragEvent) => {
   if (DRAGGABLE_AREA_MAX_X < e.clientX) e.preventDefault()
 })
+
+const dragged = async () => {
+  await localForage.setItem("OpenItems", JSON.parse(JSON.stringify(items.value)))  // same comment as above
+}
 
 /**
  * remove item
