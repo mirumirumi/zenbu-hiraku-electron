@@ -1,5 +1,5 @@
 <template>
-  <svg width="23" height="23" viewBox="-4 -4 45 45" xmlns="http://www.w3.org/2000/svg" :stroke="color">
+  <svg width="20" height="20" viewBox="-4 -4 45 45" xmlns="http://www.w3.org/2000/svg" :stroke="color">
     <g fill="none" fill-rule="evenodd">
       <g transform="translate(1 1)" :stroke-width="3.7">
         <circle stroke-opacity=".5" cx="18" cy="18" r="18" />

@@ -4,7 +4,8 @@
       <SvgIcon icon="grab" color="#c9c9c9" />
     </div>
     <div class="icon">
-      <img :src="iconDataUrl" :class="{ 'disable_image': !isEnable }">
+      <LoadSpinner v-if="isLoadingIcon" />
+      <img v-else :src="iconDataUrl" :class="{ 'disable_image': !isEnable }">
     </div>
     <div class="path" @mouseenter="seePathStart" @mouseleave="seePathEnd">
       <input type="text" class="input" :class=" {'disable': !isEnable } " v-model="item.path" @input="getFileIcon" @change="changePath(item.path)" @focus="isWantToEditting = true" placeholder="開きたい対象の絶対パスやURL" :id="item.uuid">
@@ -33,6 +34,7 @@ import SvgIcon from "../parts/SvgIcon.vue"
 import NumberInput from "../parts/NumberInput.vue"
 import SelectInput from "../parts/SelectInput.vue"
 import CheckButton from "../parts/CheckButton.vue"
+import LoadSpinner from "../parts/LoadSpinner.vue"
 import { OpenItem, WindowType } from "@/utils/defines"
 import { browserIcon, defaultIcon, folderIcon } from "@/assets/assets"
 
@@ -52,15 +54,20 @@ const emit = defineEmits<{
  */
 const item = ref(p.openItem)
 const iconDataUrl = ref("")
+const isLoadingIcon = ref(true)
 
 // for init
 ;(async () => {
+  isLoadingIcon.value = true
   await prepareFileIcon()
+  isLoadingIcon.value = false
 })()
 
 // for change input
 const getFileIcon = async () => {
+  isLoadingIcon.value = true
   await prepareFileIcon()
+  isLoadingIcon.value = false
 }
 
 async function prepareFileIcon() {
