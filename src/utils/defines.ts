@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from "uuid"
+
 export interface OpenItem {
   uuid:   string,
   path:   string,
@@ -10,4 +12,12 @@ export enum WindowType {
   NO  = "指定なし",
   MIN = "最小化",
   MAX = "最大化",  
+}
+
+export const draftItem: OpenItem = {
+  path:   "",
+  delay:  undefined,
+  window: "ウィンドウ",
+  enable: true,
+  uuid:   uuidv4(),
 }

@@ -3,7 +3,7 @@
     <div class="items_wrap">
       <VueDraggable :list="items" item-key="uuid" :move="drag" @end="dragged">
         <template #item="{ element, index }">
-          <OpenItemComponent :openItem="element" :index="index" @saveAll="saveAll" @removeSelf="removeItem" />
+          <OpenItemComponent :openItem="element" :index="index" @saveAll="saveAllFromEmits" @removeSelf="removeItem" />
         </template>
       </VueDraggable>
     </div>
@@ -23,7 +23,7 @@ import localForage from "localforage"
 import VueDraggable from "vuedraggable"
 import { v4 as uuidv4 } from "uuid"
 import { pagingInit } from "@/utils/utils"
-import { OpenItem, WindowType } from "@/utils/defines"
+import { OpenItem, WindowType, draftItem } from "@/utils/defines"
 import SvgIcon from "@/components/parts/SvgIcon.vue"
 import OpenItemComponent from "@/components/modules/OpenItem.vue"
 
@@ -60,6 +60,7 @@ const items = ref<Array<OpenItem>>()
         enable: true,
         uuid:   uuidv4(),
       },
+      draftItem,
     ]
   }
 })()
@@ -67,25 +68,24 @@ const items = ref<Array<OpenItem>>()
 /**
  * add item
  */
-const addItem = () => {
+const addItem = async () => {
   if (!items.value) return
-  items.value.push({
-    path:   "",
-    delay:  undefined,
-    window: "ウィンドウ",
-    enable: true,
-    uuid:   uuidv4(),
-  })
+  items.value.push(JSON.parse(JSON.stringify(draftItem)))  // deep copy
+
+  await saveAll()
 }
 
 /**
  * save settings
  */
-async function saveAll(item: OpenItem, index: number): Promise<void> {
+async function saveAllFromEmits(item: OpenItem, index: number): Promise<void> {
   if (!items.value) return
 
   items.value[index] = item
+  await saveAll()
+}
 
+async function saveAll() {
   /* If I try to save it as is, I get a `DOMException: Failed to execute 'put' on 'IDBObjectStore': [object Array] could not be cloned.` error.
   Is it because it is a Vue ref object or a Proxy object?
   At any rate, there is no missing data when parsing JSON this time, so this workaround solved the problem. */
@@ -107,16 +107,17 @@ document.addEventListener("dragstart", (e: DragEvent) => {
 })
 
 const dragged = async () => {
-  await localForage.setItem("OpenItems", JSON.parse(JSON.stringify(items.value)))  // same comment as above
+  await saveAll()
 }
 
 /**
  * remove item
  */
-const removeItem = (index: number) => {
+const removeItem = async (index: number) => {
   if (!items.value) return
 
   items.value.splice(index, 1)
+  await saveAll()
 }
 </script>
 

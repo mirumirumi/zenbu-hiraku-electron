@@ -63,8 +63,10 @@ const getFileIcon = async () => {
 }
 
 async function prepareFileIcon() {
-
-  /* 最初と最後に " があるときはないものとしてあげる */
+  if (item.value.path[0] === `"` && item.value.path.slice(-1)[0] === `"`) {
+    item.value.path = item.value.path.slice(1)
+    item.value.path = item.value.path.slice(0, -1)
+  }
 
   if (item.value.path === "" || item.value.path.length === 1) {
     // when path is empty or one charactor
