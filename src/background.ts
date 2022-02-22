@@ -1,6 +1,7 @@
 import { app, protocol, BrowserWindow, Tray, Menu, nativeImage, dialog } from "electron"
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib"
 import installExtension, { VUEJS3_DEVTOOLS } from "electron-devtools-installer"
+import execAllOpen from "./execAllOpen"
 import { declareElectronApis } from "./electronApis"
 
 const path = require("path")
@@ -25,7 +26,20 @@ app.whenReady().then(() => {
   tray = new Tray(icon)
 
   const contextMenu = Menu.buildFromTemplate([
-    { label: "「ぜんぶひらく」を実行", type: "normal" },
+    {
+      label: "「ぜんぶひらく」を実行", type: "normal", click: async () => {
+        const isGo = dialog.showMessageBoxSync({
+          title: "ぜんぶひらく",
+          message: "本当に登録アプリケーション全ての起動を開始してよいですか？",
+          type: "info",
+          buttons: ["はい", "やめる"],
+          cancelId: 1,
+          defaultId: 1,
+        })
+        if (isGo === 1) return
+        await execAllOpen(win)
+      }
+    },
     { label: "設定", type: "normal", click: () => { win.show() } },
     { label: "終了", role: "quit" },
   ])
