@@ -34,36 +34,36 @@ pagingInit(router.currentRoute.value.name as string)
 
 const items = ref<Array<OpenItem>>()
 
-;(async () => {
-  if (await localForage.getItem("OpenItems")) {
-    items.value = await localForage.getItem("OpenItems") as unknown as Array<OpenItem>
-  } else {
-    items.value = [
-      {
-        path:   "C:\\Users",
-        delay:  3,
-        window: WindowType.NO,
-        enable: true,
-        uuid:   uuidv4(),
-      },
-      {
-        path:   "C:\\Windows\\System32\\notepad.exe",
-        delay:  11,
-        window: WindowType.MIN,
-        enable: true,
-        uuid:   uuidv4(),
-      },
-      {
-        path:   "https://mirumi.me/apps/zh",
-        delay:  13,
-        window: WindowType.MAX,
-        enable: true,
-        uuid:   uuidv4(),
-      },
-      draftItem,
-    ]
-  }
-})()
+if (await localForage.getItem("OpenItems")) {
+  items.value = await localForage.getItem("OpenItems") as unknown as Array<OpenItem>
+} else {
+  items.value = [
+    {
+      path:   "C:\\Users",
+      delay:  3,
+      window: WindowType.NO,
+      enable: true,
+      uuid:   uuidv4(),
+    },
+    {
+      path:   "C:\\Windows\\System32\\notepad.exe",
+      delay:  11,
+      window: WindowType.MIN,
+      enable: true,
+      uuid:   uuidv4(),
+    },
+    {
+      path:   "https://mirumi.me/apps/zh",
+      delay:  13,
+      window: WindowType.MAX,
+      enable: true,
+      uuid:   uuidv4(),
+    },
+    draftItem,
+  ]
+}
+
+window.electron.exchangeOpenItems("requestOpenItems", JSON.parse(JSON.stringify(items.value)))
 
 /**
  * add item

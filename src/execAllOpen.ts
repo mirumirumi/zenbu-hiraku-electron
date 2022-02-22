@@ -9,9 +9,8 @@ export default (win: BrowserWindow): void => {
 
   win.webContents.send("requestOpenItems")
 
-  ipcMain.on("replyOpenItems", async (e: IpcMainEvent, gotItems: Array<OpenItem>) => {
+  ipcMain.once("replyOpenItems", async (e: IpcMainEvent, gotItems: Array<OpenItem>) => {
     items = gotItems
-    console.log(items)
 
     for (const item of items) {
       if (!item.enable) break

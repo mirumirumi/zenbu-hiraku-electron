@@ -3,7 +3,11 @@
   <div class="app">
     <TheSideMenu />
     <main class="view_wrap">
-      <router-view />
+      <suspense>
+        <template #default>
+          <router-view />
+        </template>
+      </suspense>
     </main>
   </div>
 </template>
