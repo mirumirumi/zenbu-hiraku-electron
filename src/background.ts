@@ -97,6 +97,15 @@ async function createWindow() {
     e.preventDefault()
     shell.openExternal(url)
   })
+
+  /**
+   * prevent developer tools
+   */
+  if (!process.env.WEBPACK_DEV_SERVER_URL) {
+    win.webContents.on("devtools-opened", () => {
+      win.webContents.closeDevTools()
+    })
+  }
 }
 
 // Quit when all windows are closed.
