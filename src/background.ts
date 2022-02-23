@@ -1,4 +1,4 @@
-import { app, protocol, BrowserWindow, Tray, Menu, nativeImage, dialog, ipcMain } from "electron"
+import { app, protocol, BrowserWindow, Tray, Menu, nativeImage, dialog, ipcMain, shell } from "electron"
 import { IpcMainEvent } from "electron/main"
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib"
 import { declareElectronApis } from "./electronApis"
@@ -87,6 +87,14 @@ async function createWindow() {
     // Load the index.html when not in development
     win.loadURL("app://./index.html")
   }
+
+  /**
+   * web page link event
+   */
+  win.webContents.on("will-navigate", (e, url: string) => {
+    e.preventDefault()
+    shell.openExternal(url)
+  })
 }
 
 // Quit when all windows are closed.
