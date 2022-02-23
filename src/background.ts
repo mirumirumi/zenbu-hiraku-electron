@@ -1,8 +1,10 @@
-import { app, protocol, BrowserWindow, Tray, Menu, nativeImage, dialog } from "electron"
+import { app, protocol, BrowserWindow, Tray, Menu, nativeImage, dialog, ipcMain } from "electron"
+import { IpcMainEvent } from "electron/main"
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib"
-import installExtension, { VUEJS3_DEVTOOLS } from "electron-devtools-installer"
-import execAllOpen from "./execAllOpen"
 import { declareElectronApis } from "./electronApis"
+import { delay } from "./utils/utils"
+import execAllOpen from "./execAllOpen"
+import installExtension, { VUEJS3_DEVTOOLS } from "electron-devtools-installer"
 
 const path = require("path")
 
@@ -115,6 +117,9 @@ app.on("ready", async () => {
     }
   }
 
+  /**
+   * avoid multi process launch
+   */
   try {
     const isNotYetAppLaunch = app.requestSingleInstanceLock()
     if (!isNotYetAppLaunch) {
@@ -128,7 +133,33 @@ app.on("ready", async () => {
     return
   }
 
-  createWindow()
+  /**
+   * create window
+   */
+  await createWindow()
+
+  /**
+   * execAllOpen if it's set up
+   */
+  await delay(3000)
+
+  win.webContents.send("requestIsExecAtStartApp")
+
+  ipcMain.on("replyIsExecAtStartApp", (e: IpcMainEvent, isExecAtStartApp: boolean) => {
+    if (isExecAtStartApp) {
+      win.webContents.send("requestDelayExec")
+
+      ipcMain.on("replyDelayExec", async (e: IpcMainEvent, delayExec: number) => {
+        /* It's better to wait for the Promise of createWindow to be resolved, but since it doesn't seem to work, I decided to put a large delay in between.
+        I think 5 seconds is enough unless the application is too bloated.
+        And since this is like a total delay, I'll subtract 5 seconds from it. */
+        if (3 <= delayExec) delayExec = delayExec - 3
+        
+        await delay(delayExec * 1000)
+        await execAllOpen(win)
+      })
+    }
+  })
 })
 
 // Exit cleanly on request from parent process in development mode.

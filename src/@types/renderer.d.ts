@@ -12,5 +12,7 @@ export type ElectronApi = {
   getFileIconPath: (path: string) => Promise<string>,
   registerStartup: (isOpenAtLogin: boolean) => void,
   exchangeOpenItems: (items: Array<OpenItem>) => void,
-  removeAllListeners: () => void,
+  exchangeIsExecAtStartApp: (isExecAtStartApp: boolean) => void,
+  exchangeDelayExec: (delayExec: number) => void,
+  removeAllListeners: (type: string) => void,
 }

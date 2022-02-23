@@ -22,7 +22,7 @@ import router from "@/router/router"
 import localForage from "localforage"
 import VueDraggable from "vuedraggable"
 import { v4 as uuidv4 } from "uuid"
-import { pagingInit, deepCopy } from "@/utils/utils"
+import { pagingInit, deepCopy, toBool } from "@/utils/utils"
 import { OpenItem, WindowType, draftItem } from "@/utils/defines"
 import SvgIcon from "@/components/parts/SvgIcon.vue"
 import OpenItemComponent from "@/components/modules/OpenItem.vue"
@@ -64,8 +64,18 @@ if (await localForage.getItem("OpenItems")) {
   items.value.slice(-1)[0].uuid = uuidv4()
 }
 
-window.electron.removeAllListeners()
+/**
+ * for execAllOpen from main process
+ */
+window.electron.removeAllListeners("OpenItems")
 window.electron.exchangeOpenItems(deepCopy(items.value))
+
+const isExecAtStartApp = toBool(localStorage.getItem("isExecAtStartApp") ?? "false")
+const delayExec =      parseInt(localStorage.getItem("delayExec")        ?? "10"   )
+
+window.electron.removeAllListeners("Preferences")
+window.electron.exchangeIsExecAtStartApp(isExecAtStartApp)
+window.electron.exchangeDelayExec(delayExec)
 
 /**
  * add item
@@ -100,7 +110,7 @@ async function saveAll() {
   await localForage.setItem("OpenItems", target)
 
   // set new items
-  window.electron.removeAllListeners()
+  window.electron.removeAllListeners("OpenItems")
   window.electron.exchangeOpenItems(target)
 }
 

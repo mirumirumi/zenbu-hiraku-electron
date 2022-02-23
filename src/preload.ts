@@ -17,5 +17,24 @@ contextBridge.exposeInMainWorld("electron", {
     })
   },
 
-  removeAllListeners: () => ipcRenderer.removeAllListeners("requestOpenItems")
+  exchangeIsExecAtStartApp: (isExecAtStartApp: boolean) => {
+    ipcRenderer.on("requestIsExecAtStartApp", () => {
+      ipcRenderer.send("replyIsExecAtStartApp", isExecAtStartApp)
+    })
+  },
+
+  exchangeDelayExec: (delayExec: number) => {
+    ipcRenderer.on("requestDelayExec", () => {
+      ipcRenderer.send("replyDelayExec", delayExec)
+    })
+  },
+
+  removeAllListeners: (type: string) => {
+    if (type === "OpenItems") {
+      ipcRenderer.removeAllListeners("requestOpenItems")
+    } else if (type === "Preferences") {
+      ipcRenderer.removeAllListeners("requestIsExecAtStartApp")
+      ipcRenderer.removeAllListeners("requestDelayExec")
+    }
+  }
 })

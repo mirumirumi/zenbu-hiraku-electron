@@ -68,8 +68,8 @@ onBeforeMount(() => {
   // there are at the first startup
   isStartAtWindows.value =       toBool(localStorage.getItem("isStartAtWindows")       ?? "false")
   isExecAtStartApp.value =       toBool(localStorage.getItem("isExecAtStartApp")       ?? "false")
-  delayExec.value =              parseInt(localStorage.getItem("delayExec")            ?? "10")
-  isConfirmAutoUpdateApp.value = toBool(localStorage.getItem("isConfirmAutoUpdateApp") ?? "true")
+  delayExec.value =            parseInt(localStorage.getItem("delayExec")              ?? "10"   )
+  isConfirmAutoUpdateApp.value = toBool(localStorage.getItem("isConfirmAutoUpdateApp") ?? "true" )
 })
 
 /**
