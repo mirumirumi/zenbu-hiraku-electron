@@ -12,9 +12,8 @@ contextBridge.exposeInMainWorld("electron", {
   registerStartup: (isOpenAtLogin: boolean) => ipcRenderer.invoke("registerStartup", isOpenAtLogin),
 
   exchangeOpenItems: (items: Array<OpenItem>) => {
-    ipcRenderer.on("requestOpenItems", (e: any, uuid: string) => {
-      console.log(uuid)
-      ipcRenderer.send("replyOpenItems", items, uuid)
+    ipcRenderer.on("requestOpenItems", () => {
+      ipcRenderer.send("replyOpenItems", items)
     })
   },
 
