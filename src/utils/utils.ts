@@ -36,3 +36,7 @@ export const pagingInit = (pageName: string): void => {
 export const toBool = (data: string): boolean => {
   return data.toLowerCase() === "true"
 }
+
+export const deepCopy = (data: any): any => {  // eslint-disable-line
+  return JSON.parse(JSON.stringify(data))
+}

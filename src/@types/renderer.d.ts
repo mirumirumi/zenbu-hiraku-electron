@@ -11,5 +11,6 @@ export type ElectronApi = {
   closeWindow: () => void,
   getFileIconPath: (path: string) => Promise<string>,
   registerStartup: (isOpenAtLogin: boolean) => void,
-  exchangeOpenItems: (channel: string, items: Array<OpenItem>) => void,
+  exchangeOpenItems: (items: Array<OpenItem>) => void,
+  removeAllListeners: () => void,
 }

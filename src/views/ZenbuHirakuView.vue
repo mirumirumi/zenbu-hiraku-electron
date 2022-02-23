@@ -22,7 +22,7 @@ import router from "@/router/router"
 import localForage from "localforage"
 import VueDraggable from "vuedraggable"
 import { v4 as uuidv4 } from "uuid"
-import { pagingInit } from "@/utils/utils"
+import { pagingInit, deepCopy } from "@/utils/utils"
 import { OpenItem, WindowType, draftItem } from "@/utils/defines"
 import SvgIcon from "@/components/parts/SvgIcon.vue"
 import OpenItemComponent from "@/components/modules/OpenItem.vue"
@@ -59,11 +59,13 @@ if (await localForage.getItem("OpenItems")) {
       enable: true,
       uuid:   uuidv4(),
     },
-    draftItem,
+    deepCopy(draftItem),
   ]
+  items.value.slice(-1)[0].uuid = uuidv4()
 }
 
-window.electron.exchangeOpenItems("requestOpenItems", JSON.parse(JSON.stringify(items.value)))
+window.electron.removeAllListeners()
+window.electron.exchangeOpenItems(deepCopy(items.value))
 
 /**
  * add item
@@ -72,7 +74,7 @@ const addItem = async () => {
   if (!items.value) return
 
   draftItem.uuid = uuidv4()
-  items.value.push(JSON.parse(JSON.stringify(draftItem)))  // deep copy
+  items.value.push(deepCopy(draftItem))
 
   isOneItem.value = false
 
@@ -90,10 +92,16 @@ async function saveAllFromEmits(item: OpenItem, index: number): Promise<void> {
 }
 
 async function saveAll() {
+  const target = deepCopy(items.value)
+
   /* If I try to save it as is, I get a `DOMException: Failed to execute 'put' on 'IDBObjectStore': [object Array] could not be cloned.` error.
   Is it because it is a Vue ref object or a Proxy object?
   At any rate, there is no missing data when parsing JSON this time, so this workaround solved the problem. */
-  await localForage.setItem("OpenItems", JSON.parse(JSON.stringify(items.value)))
+  await localForage.setItem("OpenItems", target)
+
+  // set new items
+  window.electron.removeAllListeners()
+  window.electron.exchangeOpenItems(target)
 }
 
 /**

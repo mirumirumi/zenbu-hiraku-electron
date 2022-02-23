@@ -1,9 +1,9 @@
 export interface OpenItem {
-  uuid:   string,
   path:   string,
   delay:  number|undefined,
   window: WindowType|"ウィンドウ",
   enable: boolean,
+  uuid:   string,
 }
 
 export enum WindowType {
