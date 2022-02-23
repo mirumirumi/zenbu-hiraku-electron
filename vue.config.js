@@ -15,11 +15,15 @@ module.exports = {
       builderOptions: {
         productName: "ぜんぶひらく",
         appId: "com.mirumi.zenbu-hiraku",
+        icon: "build/icon.png",
+        nsis: {
+          oneClick: false,
+          allowToChangeInstallationDirectory: true,
+        },
         win: {
-          icon: "build/icon.png",
           target: [{
-            target: "portable",
-            arch: ["x64"]
+            target: "nsis",
+            arch: ["x64", "ia32"],
           }],
         }
       }
