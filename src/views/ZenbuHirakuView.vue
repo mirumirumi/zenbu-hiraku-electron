@@ -40,21 +40,21 @@ if (await localForage.getItem("OpenItems")) {
   items.value = [
     {
       path:   "C:\\Users",
-      delay:  3,
+      delay:  1,
       window: WindowType.NO,
       enable: true,
       uuid:   uuidv4(),
     },
     {
       path:   "C:\\Windows\\System32\\notepad.exe",
-      delay:  11,
+      delay:  2,
       window: WindowType.MIN,
       enable: true,
       uuid:   uuidv4(),
     },
     {
       path:   "https://mirumi.me/apps/zh",
-      delay:  13,
+      delay:  3,
       window: WindowType.MAX,
       enable: true,
       uuid:   uuidv4(),

@@ -1,4 +1,4 @@
-import { app, protocol, BrowserWindow, Tray, Menu, nativeImage, dialog, ipcMain, shell } from "electron"
+import { app, protocol, BrowserWindow, Tray, Menu, dialog, ipcMain, shell } from "electron"
 import { IpcMainEvent } from "electron/main"
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib"
 import { declareElectronApis } from "./electronApis"
@@ -24,7 +24,9 @@ protocol.registerSchemesAsPrivileged([
 let tray: Tray
 
 app.whenReady().then(() => {
-  const icon = nativeImage.createFromPath("build/icon.png")
+  const icon = process.env.WEBPACK_DEV_SERVER_URL
+    ? path.join(__dirname, "../build/icon.png")
+    : path.join(__dirname, "../app.asar/img/icon.4f45ba4d.png")
   tray = new Tray(icon)
 
   const contextMenu = Menu.buildFromTemplate([
