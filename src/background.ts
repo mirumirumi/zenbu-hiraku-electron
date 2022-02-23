@@ -132,7 +132,11 @@ app.on("ready", async () => {
     const isNotYetAppLaunch = app.requestSingleInstanceLock()
     if (!isNotYetAppLaunch) {
       console.log("🍊 Already running app! 🍊")
-      dialog.showMessageBoxSync({ message: "「ぜんぶひらく」は既に起動しています。二重起動はできません。" })
+      dialog.showMessageBoxSync({
+        title: "ぜんぶひらく",
+        message: "「ぜんぶひらく」は既に起動しています。二重起動はできません。",
+        type: "warning",
+      })
       app.quit()
       return
     }
