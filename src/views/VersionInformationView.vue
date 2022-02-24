@@ -6,7 +6,7 @@
       </div>
       <div class="app_info">
         <div class="name">ぜんぶひらく</div>
-        <div class="version">Version: 2.0.0</div>
+        <div class="version">Version: {{ version }}</div>
       </div>
       <div class="update">
         <button type="button" class="button" tabindex="-1" @click="1">
@@ -44,7 +44,10 @@ import { pagingInit } from "@/utils/utils"
  */
 pagingInit(router.currentRoute.value.name as string)
 
-
+/**
+ * get app version
+ */
+const version = ref(await window.electron.getVersion())
 </script>
 
 <style lang="scss" scoped>

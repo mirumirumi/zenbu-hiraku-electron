@@ -15,4 +15,5 @@ export type ElectronApi = {
   exchangeIsExecAtStartApp: (isExecAtStartApp: boolean) => void,
   exchangeDelayExec: (delayExec: number) => void,
   removeAllListeners: (type: string) => void,
+  getVersion: () => Promise<string>,
 }

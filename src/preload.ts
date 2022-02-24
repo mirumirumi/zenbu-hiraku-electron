@@ -36,5 +36,7 @@ contextBridge.exposeInMainWorld("electron", {
       ipcRenderer.removeAllListeners("requestIsExecAtStartApp")
       ipcRenderer.removeAllListeners("requestDelayExec")
     }
-  }
+  },
+
+  getVersion: (): Promise<string> => ipcRenderer.invoke("getVersion"),
 })
