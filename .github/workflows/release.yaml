@@ -20,6 +20,8 @@ jobs:
         with:
           node-version: "14"
       - name: Building...
+        env: 
+          GH_TOKEN: ${{ secrets.P_A_T }}
         run: |
           npm install
           npm run electron:build
@@ -28,5 +30,6 @@ jobs:
       - name: Creating Releases...
         uses: softprops/action-gh-release@v1
         with:
+          token: ${{ secrets.P_A_T }}
           files: |
             ~/release/*.*
