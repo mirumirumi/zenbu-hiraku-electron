@@ -21,4 +21,8 @@ export const declareElectronApis = (app: App, win: BrowserWindow): void => {
       openAtLogin: isOpenAtLogin,
     })
   })
+
+  ipcMain.handle("getVersion", (): string => {
+    return app.getVersion()
+  })
 }
