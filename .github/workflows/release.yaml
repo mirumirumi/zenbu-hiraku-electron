@@ -15,18 +15,12 @@ jobs:
         with:
           node-version: "14"
 
-      - name: Building...
+      - name: Building
         env: 
-          GH_TOKEN: ${{ secrets.P_A_T }}  # なんかこれ ${{ secrets.github_token }} で何もしなくても提供されているというウワサ（この下でやってるやつ）
+          GH_TOKEN: ${{ secrets.github_token }}  # don't need to register anything to get PAT automatically
         run: |
           npm install
-          npm run build-prd
-
-      - name: Building...
-        uses: samuelmeuli/action-electron-builder@v1
-        with:
-          github_token: ${{ secrets.github_token }}
-          use_vue_cli: true
+          npm run electron:build
 
       - name: Make dirs...
         run: |
@@ -46,6 +40,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           tag_name: "v${{ steps.package-version.outputs.current-version}}"
-          token: ${{ secrets.P_A_T }}
+          token: ${{ secrets.github_token }}
           files: |
             ~/release/*.*

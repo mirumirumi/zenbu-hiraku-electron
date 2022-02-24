@@ -15,6 +15,7 @@
         "build-prd": "vue-cli-service build --mode prd",
         "electron:serve": "vue-cli-service electron:serve",
         "electron:build": "vue-cli-service electron:build",
+        "electron:build-for-github-actions": "vue-cli-service electron:build -w",
         "postinstall": "electron-builder install-app-deps",
         "postuninstall": "electron-builder install-app-deps"
     },
