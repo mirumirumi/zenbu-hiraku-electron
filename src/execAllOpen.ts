@@ -14,9 +14,9 @@ export default (win: BrowserWindow): void => {
     console.log(items)
 
     for (const item of items) {
-      if (!item.enable) break
+      if (!item.enable) continue
 
-      if (item.path === "") break
+      if (item.path === "") continue
 
       let window = " "
       if (item.window === WindowType.NO) window = " "
