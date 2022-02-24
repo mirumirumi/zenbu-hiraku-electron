@@ -27,9 +27,20 @@ jobs:
           npm run electron:build
           mkdir ~/release/
           copy dist_electron/ぜんぶひらく_Setup.exe ~/release/
-      - name: Creating Releases...
+
+      - name: Getting version from package.json...
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@master
+
+      - name: Creating a Tag...
+      - uses: rickstaa/action-create-tag@v1
+        with:
+          tag: "v${{ steps.package-version.outputs.current-version}}"
+
+      - name: Creating a Release...
         uses: softprops/action-gh-release@v1
         with:
+          tag_name: "v${{ steps.package-version.outputs.current-version}}"
           token: ${{ secrets.P_A_T }}
           files: |
             ~/release/*.*
