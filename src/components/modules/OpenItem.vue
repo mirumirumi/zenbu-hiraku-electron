@@ -77,7 +77,7 @@ async function prepareFileIcon() {
     item.value.path = item.value.path.slice(0, -1)
   }
 
-  // exclude the part for command line arguments from the regular expression for getting icons
+  // exclude the part for command line arguments from the regular expression for getting icons (regex test: https://regex101.com/r/8Hd7de/1)
   const target = item.value.path.replace(/(.*?[^\\\/]+(\\|\/)?)( (\/|-).*?)$/, "$1")  // eslint-disable-line
 
   if (target === "" || target.length === 1) {
