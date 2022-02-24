@@ -28,6 +28,5 @@ jobs:
       - name: Creating Releases...
         uses: softprops/action-gh-release@v1
         with:
-          token: ${{ secrets.P_A_T }}
           files: |
             ~/release/*.*
