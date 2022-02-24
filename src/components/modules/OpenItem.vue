@@ -71,27 +71,31 @@ const getFileIcon = async () => {
 }
 
 async function prepareFileIcon() {
+  // if there is a " at the beginning or end, delete it (for shift+right click)
   if (item.value.path[0] === `"` && item.value.path.slice(-1)[0] === `"`) {
     item.value.path = item.value.path.slice(1)
     item.value.path = item.value.path.slice(0, -1)
   }
 
-  if (item.value.path === "" || item.value.path.length === 1) {
+  // exclude the part for command line arguments from the regular expression for getting icons
+  const target = item.value.path.replace(/(.*?[^\\\/]+(\\|\/)?)( (\/|-).*?)$/, "$1")  // eslint-disable-line
+
+  if (target === "" || target.length === 1) {
     // when path is empty or one charactor
     iconDataUrl.value = defaultIcon
     return
   }
 
-  if (item.value.path.match(/^[a-zA-Z]:(\/|\\)?$/gmi)) {
+  if (target.match(/^[a-zA-Z]:(\/|\\)?$/gmi)) {
     // for drive leter
-    iconDataUrl.value = await window.electron.getFileIconPath(item.value.path)
+    iconDataUrl.value = await window.electron.getFileIconPath(target)
     return
   }
 
-  if (item.value.path.match(/^[a-zA-Z]:(\/|\\)?/gmi)) {
-    if (item.value.path.match(/(\/|\\)[^\.]+\.[^\.]+?$/gmi)) {  // eslint-disable-line
+  if (target.match(/^[a-zA-Z]:(\/|\\)?/gmi)) {
+    if (target.match(/(\/|\\)[^\.]+\.[^\.]+?$/gmi)) {  // eslint-disable-line
       // for normal applications(include *.*)
-      iconDataUrl.value = await window.electron.getFileIconPath(item.value.path)
+      iconDataUrl.value = await window.electron.getFileIconPath(target)
       return
     } else {
       // for like directory
@@ -100,7 +104,7 @@ async function prepareFileIcon() {
     }
   }
 
-  if ((item.value.path.match(/^https?:/gmi)) || (item.value.path.match(/^(https?:\/\/)?.*?\..*?.+/gmi))) {
+  if ((target.match(/^https?:/gmi)) || (target.match(/^(https?:\/\/)?.*?\..*?.+/gmi))) {
     // for url
     iconDataUrl.value = browserIcon
     return
