@@ -52,7 +52,7 @@ jobs:
           tag: "v${{ steps.package-version.outputs.current-version}}"
 
       - name: Creating a Release...
-      - uses: ncipollo/release-action@v1
+        uses: ncipollo/release-action@v1
         with:
           artifacts: "~/release/*.exe"
           tag: "v${{ steps.package-version.outputs.current-version}}"
