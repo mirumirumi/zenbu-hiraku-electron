@@ -1,0 +1,26 @@
+name: release
+
+on:
+  push:
+    branches:
+      - release/prd
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2.4.1
+        with:
+          node-version: "14"
+      - name: Building...
+        run: |
+          npm install
+          npm run electron:build
+          mkdir -p ~/release/
+          cp dist_electron/ぜんぶひらく_Setup.exe ~/release/
+      - name: Creating Releases...
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ~/release/*.*
