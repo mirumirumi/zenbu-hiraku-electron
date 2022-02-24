@@ -101,7 +101,7 @@ async function createWindow() {
   /**
    * prevent developer tools
    */
-  if (!process.env.WEBPACK_DEV_SERVER_URL) {
+  if (!isDevelopment) {
     win.webContents.on("devtools-opened", () => {
       win.webContents.closeDevTools()
     })

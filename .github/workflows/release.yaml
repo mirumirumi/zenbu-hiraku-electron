@@ -1,9 +1,3 @@
-# Windows がターゲットのビルドの場合でも builderOptions で問題なく指定できると思っていたが、
-# まさかの実行している OS に依存してターゲットが変わってしまう？仕様っぽい。
-#　 （いくら調べてもそのような情報は見つからなかったが、GitHub Actions のログは明らかにそうなっている）
-# これ（https://github.com/marketplace/actions/electron-builder-action）などを使えばいけそうだが、vue-electron-builder との関連性が不明であること、
-# 依存するものを増やすとビルド関連で問題が起きたときに原因を特定するのがより困難になりそうなことなどから実行 OS を Windows にしている。
-
 name: release
 
 on:
@@ -13,7 +7,7 @@ on:
 
 jobs:
   release:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
 
@@ -23,12 +17,21 @@ jobs:
 
       - name: Building...
         env: 
-          GH_TOKEN: ${{ secrets.P_A_T }}
+          GH_TOKEN: ${{ secrets.P_A_T }}  # なんかこれ ${{ secrets.github_token }} で何もしなくても提供されているというウワサ（この下でやってるやつ）
         run: |
           npm install
-          npm run electron:build
+          npm run build-prd
+
+      - name: Building...
+        uses: samuelmeuli/action-electron-builder@v1
+        with:
+          github_token: ${{ secrets.github_token }}
+          use_vue_cli: true
+
+      - name: Make dirs...
+        run: |
           mkdir ~/release/
-          copy dist_electron/ぜんぶひらく_Setup.exe ~/release/
+          cp dist_electron/ぜんぶひらく_Setup.exe ~/release/
 
       - name: Getting version from package.json...
         id: package-version
