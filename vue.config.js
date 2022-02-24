@@ -19,6 +19,7 @@ module.exports = {
         nsis: {
           oneClick: false,
           allowToChangeInstallationDirectory: true,
+          artifactName: "${productName}_Setup.${ext}"
         },
         win: {
           target: [{
