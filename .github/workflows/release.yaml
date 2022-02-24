@@ -16,9 +16,11 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
+
       - uses: actions/setup-node@v2.4.1
         with:
           node-version: "14"
+
       - name: Building...
         env: 
           GH_TOKEN: ${{ secrets.P_A_T }}
@@ -33,7 +35,7 @@ jobs:
         uses: martinbeentjes/npm-get-version-action@master
 
       - name: Creating a Tag...
-      - uses: rickstaa/action-create-tag@v1
+        uses: rickstaa/action-create-tag@v1
         with:
           tag: "v${{ steps.package-version.outputs.current-version}}"
 
