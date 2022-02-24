@@ -1,4 +1,4 @@
-import { app, protocol, BrowserWindow, Tray, Menu, nativeImage, dialog, ipcMain, shell } from "electron"
+import { app, protocol, BrowserWindow, Tray, Menu, dialog, ipcMain, shell } from "electron"
 import { IpcMainEvent } from "electron/main"
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib"
 import { declareElectronApis } from "./electronApis"
@@ -24,7 +24,9 @@ protocol.registerSchemesAsPrivileged([
 let tray: Tray
 
 app.whenReady().then(() => {
-  const icon = nativeImage.createFromPath("build/icon.png")
+  const icon = process.env.WEBPACK_DEV_SERVER_URL
+    ? path.join(__dirname, "../build/icon.png")
+    : path.join(__dirname, "../app.asar/img/icon.4f45ba4d.png")
   tray = new Tray(icon)
 
   const contextMenu = Menu.buildFromTemplate([
@@ -95,6 +97,15 @@ async function createWindow() {
     e.preventDefault()
     shell.openExternal(url)
   })
+
+  /**
+   * prevent developer tools
+   */
+  if (!process.env.WEBPACK_DEV_SERVER_URL) {
+    win.webContents.on("devtools-opened", () => {
+      win.webContents.closeDevTools()
+    })
+  }
 }
 
 // Quit when all windows are closed.
@@ -132,7 +143,11 @@ app.on("ready", async () => {
     const isNotYetAppLaunch = app.requestSingleInstanceLock()
     if (!isNotYetAppLaunch) {
       console.log("🍊 Already running app! 🍊")
-      dialog.showMessageBoxSync({ message: "「ぜんぶひらく」は既に起動しています。二重起動はできません。" })
+      dialog.showMessageBoxSync({
+        title: "ぜんぶひらく",
+        message: "「ぜんぶひらく」は既に起動しています。二重起動はできません。",
+        type: "warning",
+      })
       app.quit()
       return
     }

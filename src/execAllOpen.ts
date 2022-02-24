@@ -14,16 +14,20 @@ export default (win: BrowserWindow): void => {
     console.log(items)
 
     for (const item of items) {
-      if (!item.enable) break
+      if (!item.enable) continue
 
-      if (item.path === "") break
+      if (item.path === "") continue
 
       let window = " "
       if (item.window === WindowType.NO) window = " "
       if (item.window === WindowType.MIN) window = "/min"
       if (item.window === WindowType.MAX) window = "/max"
       
-      child_process.spawn(`start ${ window } "" "${ item.path }"`, { shell: true })
+      const argsStr = item.path.replace(/(\\|\/)?.*? (.*)$/gmi, "$2")
+      const args = argsStr.split(" ")
+      item.path = item.path.replace(argsStr, "")
+
+      child_process.spawn(`start ${ window } "" "${ item.path }"`, args, { shell: true })
 
       if (item.delay) await delay(item.delay * 1000)
     }
