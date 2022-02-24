@@ -20,7 +20,7 @@ jobs:
           GH_TOKEN: ${{ secrets.github_token }}  # don't need to register anything to get PAT automatically
         run: |
           npm install
-          npm run electron:build
+          npm run electron:build-for-github-actions
 
       - name: Make dirs...
         run: |
