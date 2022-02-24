@@ -39,6 +39,8 @@ jobs:
         run: |
           mkdir ~/release/
           cp dist_electron/ぜんぶひらく_Setup.exe ~/release/
+          cd ~/release/
+          ls -lha
 
       - name: Getting version from package.json...
         id: package-version
@@ -55,4 +57,4 @@ jobs:
           tag_name: "v${{ steps.package-version.outputs.current-version}}"
           token: ${{ secrets.github_token }}
           files: |
-            ~/release/ぜんぶひらく_Setup.exe
+            ぜんぶひらく_Setup.exe
