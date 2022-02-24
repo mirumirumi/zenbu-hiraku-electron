@@ -38,9 +38,7 @@ jobs:
       - name: Make dirs...
         run: |
           mkdir ~/release/
-          cp dist_electron/ぜんぶひらく_Setup.exe ~/release/
-          cd ~/release/
-          ls -lha
+          cp dist_electron/zenbu-hiraku_setup.exe ~/release/
 
       - name: Getting version from package.json...
         id: package-version
