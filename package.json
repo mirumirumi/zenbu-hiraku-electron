@@ -1,7 +1,7 @@
 {
     "name": "zenbu-hiraku",
-    "version": "2.0.0",
-    "description": "Windows utility tool",
+    "version": "2.0.1",
+    "description": "指定したアプリケーションを自動でぜんぶひらきます。",
     "author": {
         "name": "みるみスタジオ",
         "email": "info@milmemo.net",
