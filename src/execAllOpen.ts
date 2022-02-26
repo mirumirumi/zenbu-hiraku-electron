@@ -23,9 +23,14 @@ export default (win: BrowserWindow): void => {
       if (item.window === WindowType.MIN) window = "/min"
       if (item.window === WindowType.MAX) window = "/max"
       
-      const argsStr = item.path.replace(/(\\|\/)?.*? (.*)$/gmi, "$2")
-      const args = argsStr.split(" ")
-      item.path = item.path.replace(argsStr, "")
+      const argsStr = item.path.replace(/(.*?[^\\\/]+(\\|\/)?) ((\/|-).*?)$/gmi, "$3")  // eslint-disable-line
+      let args: Array<string> = []
+      if (argsStr !== item.path) {  // even if you don't get a hit, when you capture it, you'll get the whole original string, regardless of the number
+        args = argsStr.split(" ")
+        item.path = item.path.replace(" " + argsStr, "")
+      }
+      console.log("args:", args)
+      console.log("item.path:", item.path)
 
       child_process.spawn(`start ${ window } "" "${ item.path }"`, args, { shell: true })
 

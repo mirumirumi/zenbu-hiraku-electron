@@ -19,7 +19,8 @@ module.exports = {
         nsis: {
           oneClick: false,
           allowToChangeInstallationDirectory: true,
-          artifactName: "zenbu-hiraku_setup.${ext}"
+          artifactName: "zenbu-hiraku_setup.${ext}",
+          publish: ["github"],
         },
         win: {
           target: [{
