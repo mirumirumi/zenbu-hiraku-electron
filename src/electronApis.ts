@@ -1,5 +1,6 @@
 import { App, BrowserWindow } from "electron"
 import { IpcMainInvokeEvent } from "electron/main"
+import { autoUpdater } from "electron-updater"
 
 const { ipcMain } = require("electron")
 
@@ -24,5 +25,9 @@ export const declareElectronApis = (app: App, win: BrowserWindow): void => {
 
   ipcMain.handle("getVersion", (): string => {
     return app.getVersion()
+  })
+
+  ipcMain.handle("checkUpdate", (): void => {
+    autoUpdater.checkForUpdatesAndNotify()
   })
 }

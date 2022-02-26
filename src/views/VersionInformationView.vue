@@ -9,8 +9,9 @@
         <div class="version">Version: {{ version }}</div>
       </div>
       <div class="update">
-        <button type="button" class="button" tabindex="-1" @click="1">
-          <span>更新を確認する</span>
+        <button type="button" class="button" tabindex="-1" @click="checkUpdate" :class="{ 'checking': isCheckingUpdate }">
+          <LoadSpinner v-if="isCheckingUpdate" color="#505050" />
+          <span v-else>更新を確認する</span>
         </button>
       </div>
     </div>
@@ -36,8 +37,9 @@
 
 <script setup lang="ts">
 import { ref } from "vue"
+import { delay, pagingInit } from "@/utils/utils"
 import router from "@/router/router"
-import { pagingInit } from "@/utils/utils"
+import LoadSpinner from "@/components/parts/LoadSpinner.vue"
 
 /**
  * paging init
@@ -48,6 +50,20 @@ pagingInit(router.currentRoute.value.name as string)
  * get app version
  */
 const version = ref(await window.electron.getVersion())
+
+/**
+ * check update
+ */
+const isCheckingUpdate = ref(false)
+
+const checkUpdate = async () => {
+  if (isCheckingUpdate.value) return
+
+  isCheckingUpdate.value = true
+  await window.electron.checkUpdate()
+  await delay(123)
+  isCheckingUpdate.value = false
+}
 </script>
 
 <style lang="scss" scoped>
@@ -77,13 +93,21 @@ const version = ref(await window.electron.getVersion())
     .update {
       text-align: center;
       button {
-        padding: 0.4em 1.3em 0.39em;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        width: 131px;
+        height: 36.2px;
+        padding: 0.4em 1.3em 0.4em;
         font-size: 0.82rem;
         background-color: #f0f0f0;
         box-shadow: 1px 1px 2px 1px rgba(0, 0, 0, 0.13);
         transition: 0.07s ease-out;
         &:hover {
           background-color: #e5e5e5;
+        }
+        &.checking {
+          cursor: auto;
         }
       }
       span {
