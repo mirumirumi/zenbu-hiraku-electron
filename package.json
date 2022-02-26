@@ -14,7 +14,7 @@
         "↑ use in daily development": "",
         "electron:build": "vue-cli-service electron:build",
         "↑ use in daily development test build": "",
-        "electron:build-for-github-actions": "vue-cli-service electron:build-prd -w --publish always",
+        "electron:build-for-github-actions": "vue-cli-service electron:build -w --publish always",
         "↑ use for production in GitHub Actions only": "",
         "postinstall": "electron-builder install-app-deps",
         "postuninstall": "electron-builder install-app-deps"
