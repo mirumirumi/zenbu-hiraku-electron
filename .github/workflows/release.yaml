@@ -40,18 +40,19 @@ jobs:
           mkdir ~/release/
           cp dist_electron/zenbu-hiraku_setup.exe ~/release/
 
-      - name: Getting version from package.json...
-        id: package-version
-        uses: martinbeentjes/npm-get-version-action@master
+      # electron-builder の publish 機能によってタグ作成～リリース作成まで行われるようになった
+      # - name: Getting version from package.json...
+      #   id: package-version
+      #   uses: martinbeentjes/npm-get-version-action@master
 
-      - name: Creating a Tag...
-        uses: rickstaa/action-create-tag@v1
-        with:
-          tag: "v${{ steps.package-version.outputs.current-version}}"
+      # - name: Creating a Tag...
+      #   uses: rickstaa/action-create-tag@v1
+      #   with:
+      #     tag: "v${{ steps.package-version.outputs.current-version}}"
 
-      - name: Creating a Release...
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: "~/release/*.exe"
-          tag: "v${{ steps.package-version.outputs.current-version}}"
-          token: ${{ secrets.github_token }}
+      # - name: Creating a Release...
+      #   uses: ncipollo/release-action@v1
+      #   with:
+      #     artifacts: "~/release/*.exe"
+      #     tag: "v${{ steps.package-version.outputs.current-version}}"
+      #     token: ${{ secrets.github_token }}
