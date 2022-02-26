@@ -20,7 +20,10 @@ module.exports = {
           oneClick: false,
           allowToChangeInstallationDirectory: true,
           artifactName: "zenbu-hiraku_setup.${ext}",
-          publish: ["github"],
+          publish: {
+            provider: "github",
+            releaseType: "release",
+          },
         },
         win: {
           target: [{
