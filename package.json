@@ -1,6 +1,6 @@
 {
     "name": "zenbu-hiraku",
-    "version": "2.0.2",
+    "version": "2.0.3",
     "description": "指定したアプリケーションを自動でぜんぶひらきます。",
     "author": {
         "name": "みるみスタジオ",
@@ -9,13 +9,13 @@
     },
     "private": true,
     "scripts": {
-        "serve": "vue-cli-service serve --mode dev",
-        "build": "vue-cli-service build",
-        "build-dev": "vue-cli-service build --mode dev",
-        "build-prd": "vue-cli-service build --mode prd",
+        "serve": "vue-cli-service serve",
         "electron:serve": "vue-cli-service electron:serve",
+        "↑ use in daily development": "",
         "electron:build": "vue-cli-service electron:build",
-        "electron:build-for-github-actions": "vue-cli-service electron:build -w --publish always",
+        "↑ use in daily development test build": "",
+        "electron:build-for-github-actions": "vue-cli-service electron:build-prd -w --publish always",
+        "↑ use for production in GitHub Actions only": "",
         "postinstall": "electron-builder install-app-deps",
         "postuninstall": "electron-builder install-app-deps"
     },

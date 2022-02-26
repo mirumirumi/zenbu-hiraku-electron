@@ -16,6 +16,7 @@ module.exports = {
         productName: "ぜんぶひらく",
         appId: "com.mirumi.zenbu-hiraku",
         icon: "build/icon.png",
+        extraResources: ["*/*.vbs"],
         nsis: {
           oneClick: false,
           allowToChangeInstallationDirectory: true,

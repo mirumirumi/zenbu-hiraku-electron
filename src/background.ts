@@ -13,7 +13,7 @@ const path = require("path")
  * init
  */
 let win: BrowserWindow
-const isDevelopment = process.env.NODE_ENV !== "prd"
+const isDevelopment = process.env.NODE_ENV !== "production"
 
 protocol.registerSchemesAsPrivileged([
   { scheme: "app", privileges: { secure: true, standard: true } }
