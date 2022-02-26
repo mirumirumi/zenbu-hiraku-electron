@@ -39,4 +39,6 @@ contextBridge.exposeInMainWorld("electron", {
   },
 
   getVersion: (): Promise<string> => ipcRenderer.invoke("getVersion"),
+
+  checkUpdate: (): Promise<void> => ipcRenderer.invoke("checkUpdate"),
 })
