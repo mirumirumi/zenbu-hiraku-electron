@@ -3,6 +3,7 @@ import { IpcMainEvent } from "electron/main"
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib"
 import { declareElectronApis } from "./electronApis"
 import { delay } from "./utils/utils"
+import { autoUpdater } from "electron-updater"
 import execAllOpen from "./execAllOpen"
 import installExtension, { VUEJS3_DEVTOOLS } from "electron-devtools-installer"
 
@@ -106,6 +107,26 @@ async function createWindow() {
       win.webContents.closeDevTools()
     })
   }
+
+  /**
+   * auto update
+   */
+  autoUpdater.checkForUpdatesAndNotify()
+  
+  autoUpdater.on("update-downloaded", () => {
+    const isGo = dialog.showMessageBoxSync(win, {
+      title: "ぜんぶひらく",
+      message: "「ぜんぶひらく」の新しいバージョンをダウンロードしました。再起動して更新を適用しますか？",
+      type: "info",
+      buttons: ["更新して再起動", "あとで"],
+      cancelId: 1,
+      defaultId: 0,
+    })
+  
+    if (isGo !== 1){
+      autoUpdater.quitAndInstall()
+    }
+  })
 }
 
 // Quit when all windows are closed.
