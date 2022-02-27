@@ -28,6 +28,6 @@ export const declareElectronApis = (app: App, win: BrowserWindow): void => {
   })
 
   ipcMain.handle("checkUpdate", (): void => {
-    autoUpdater.checkForUpdatesAndNotify()
+    autoUpdater.checkForUpdates()
   })
 }

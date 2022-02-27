@@ -17,6 +17,15 @@ module.exports = {
         appId: "com.mirumi.zenbu-hiraku",
         icon: "build/icon.png",
         extraResources: ["*/*.vbs"],
+        win: {
+          target: [{
+            target: "nsis",
+            arch: ["x64", "ia32"],
+          }, {
+            target: "portable",
+            arch: ["x64", "ia32"],
+          }],
+        },
         nsis: {
           oneClick: false,
           allowToChangeInstallationDirectory: true,
@@ -26,12 +35,13 @@ module.exports = {
             releaseType: "release",
           },
         },
-        win: {
-          target: [{
-            target: "nsis",
-            arch: ["x64", "ia32"],
-          }],
-        }
+        portable: {
+          "artifactName": "zenbu-hiraku_${arch}.${ext}",
+          publish: {
+            provider: "github",
+            releaseType: "release",
+          },
+        },
       }
     }
   },

@@ -111,9 +111,12 @@ async function createWindow() {
   /**
    * auto update
    */
-  autoUpdater.checkForUpdatesAndNotify()
-  
+  autoUpdater.checkForUpdates()
+
   autoUpdater.on("update-downloaded", () => {
+    // quit when portable version
+    if (isPortableApp()) return
+
     const isGo = dialog.showMessageBoxSync(win, {
       title: "ぜんぶひらく",
       message: "「ぜんぶひらく」の新しいバージョンをダウンロードしました。再起動して更新を適用しますか？",
@@ -122,11 +125,32 @@ async function createWindow() {
       cancelId: 1,
       defaultId: 0,
     })
-  
     if (isGo !== 1){
       autoUpdater.quitAndInstall()
     }
   })
+
+  autoUpdater.on("update-available", () => {
+    // quit when installer version
+    if (!isPortableApp()) return
+
+    const isGo = dialog.showMessageBoxSync(win, {
+      title: "ぜんぶひらく",
+      message: "「ぜんぶひらく」の新しいバージョンがあります。ダウンロードページを開きますか？",
+      type: "info",
+      buttons: ["ダウンロードページを開く", "あとで"],
+      cancelId: 1,
+      defaultId: 0,
+    })
+    if (isGo !== 1) {
+      shell.openExternal("https://mirumi.me/apps/zh")
+    }
+  })
+}
+
+function isPortableApp(): boolean {
+  const cd = app.getPath("exe")
+  return /AppData(\/|\\)Local(\/|\\)Temp/gmi.test(cd)
 }
 
 // Quit when all windows are closed.
