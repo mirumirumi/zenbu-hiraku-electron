@@ -1,7 +1,7 @@
 import child_process from "child_process"
 import { delay } from "./utils/utils"
 import { OpenItem, WindowType } from "./utils/defines"
-import { BrowserWindow, ipcMain, shell } from "electron"
+import { BrowserWindow, ipcMain } from "electron"
 import { IpcMainEvent } from "electron/main"
 
 const path = require("path")
