@@ -29,12 +29,19 @@ contextBridge.exposeInMainWorld("electron", {
     })
   },
 
+  exchangeIsAutoUpdate: (isAutoUpdate: boolean) => {
+    ipcRenderer.on("requestIsAutoUpdate", () => {
+      ipcRenderer.send("replyIsAutoUpdate", isAutoUpdate)
+    })
+  },
+
   removeAllListeners: (type: string) => {
     if (type === "OpenItems") {
       ipcRenderer.removeAllListeners("requestOpenItems")
     } else if (type === "Preferences") {
       ipcRenderer.removeAllListeners("requestIsExecAtStartApp")
       ipcRenderer.removeAllListeners("requestDelayExec")
+      ipcRenderer.removeAllListeners("requestIsAutoUpdate")
     }
   },
 

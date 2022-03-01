@@ -107,45 +107,6 @@ async function createWindow() {
       win.webContents.closeDevTools()
     })
   }
-
-  /**
-   * auto update
-   */
-  autoUpdater.checkForUpdates()
-
-  autoUpdater.on("update-downloaded", () => {
-    // quit when portable version
-    if (isPortableApp()) return
-
-    const isGo = dialog.showMessageBoxSync(win, {
-      title: "ぜんぶひらく",
-      message: "「ぜんぶひらく」の新しいバージョンをダウンロードしました。再起動して更新を適用しますか？",
-      type: "info",
-      buttons: ["更新して再起動", "あとで"],
-      cancelId: 1,
-      defaultId: 0,
-    })
-    if (isGo !== 1){
-      autoUpdater.quitAndInstall()
-    }
-  })
-
-  autoUpdater.on("update-available", () => {
-    // quit when installer version
-    if (!isPortableApp()) return
-
-    const isGo = dialog.showMessageBoxSync(win, {
-      title: "ぜんぶひらく",
-      message: "「ぜんぶひらく」の新しいバージョンがあります。ダウンロードページを開きますか？",
-      type: "info",
-      buttons: ["ダウンロードページを開く", "あとで"],
-      cancelId: 1,
-      defaultId: 0,
-    })
-    if (isGo !== 1) {
-      shell.openExternal("https://mirumi.me/apps/zh")
-    }
-  })
 }
 
 function isPortableApp(): boolean {
@@ -226,6 +187,51 @@ app.on("ready", async () => {
         await delay(delayExec * 1000)
         await execAllOpen(win)
       })
+    }
+  })
+
+  /**
+   * auto update
+   */
+  win.webContents.send("requestIsAutoUpdate")
+
+  ipcMain.on("replyIsAutoUpdate", (e: IpcMainEvent, isAutoUpdate: boolean) => {
+    if (isAutoUpdate) {
+      autoUpdater.checkForUpdates()
+    }
+  })
+
+  autoUpdater.on("update-downloaded", () => {
+    // quit when portable version
+    if (isPortableApp()) return
+
+    const isGo = dialog.showMessageBoxSync(win, {
+      title: "ぜんぶひらく",
+      message: "「ぜんぶひらく」の新しいバージョンをダウンロードしました。再起動して更新を適用しますか？",
+      type: "info",
+      buttons: ["更新して再起動", "あとで"],
+      cancelId: 1,
+      defaultId: 0,
+    })
+    if (isGo !== 1){
+      autoUpdater.quitAndInstall()
+    }
+  })
+
+  autoUpdater.on("update-available", () => {
+    // quit when installer version
+    if (!isPortableApp()) return
+
+    const isGo = dialog.showMessageBoxSync(win, {
+      title: "ぜんぶひらく",
+      message: "「ぜんぶひらく」の新しいバージョンがあります。ダウンロードページを開きますか？",
+      type: "info",
+      buttons: ["ダウンロードページを開く", "あとで"],
+      cancelId: 1,
+      defaultId: 0,
+    })
+    if (isGo !== 1) {
+      shell.openExternal("https://mirumi.me/apps/zh")
     }
   })
 })
