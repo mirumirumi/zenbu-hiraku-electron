@@ -1,10 +1,11 @@
 import child_process from "child_process"
 import { delay } from "./utils/utils"
 import { OpenItem, WindowType } from "./utils/defines"
-import { BrowserWindow, ipcMain } from "electron"
+import { BrowserWindow, ipcMain, shell } from "electron"
 import { IpcMainEvent } from "electron/main"
 
 const path = require("path")
+const fs = require("fs")
 
 export default (win: BrowserWindow): void => {
   let items: Array<OpenItem>
@@ -29,17 +30,25 @@ export default (win: BrowserWindow): void => {
       console.log("args:", args)
       console.log("item.path:", item.path)
 
-      const p = child_process.spawn(`start ${ item.path }`, args, { shell: true })
-      console.log(p.pid)
+      child_process.spawn(`start ${ item.path }`, args, { shell: true })
 
-      await delay(333)
+      await delay(333)  // it's a mystery if these numbers are really good enough
+
+      // write process id
+      child_process.spawnSync(`start ${path.join(__dirname, "../public/process.vbs")}`, { shell: true })
+
+      await delay(333)  // it's a mystery if these numbers are really good enough (this one looked like it could do without it, but just in case)
+
+      // read process id
+      const pid = fs.readFileSync(`${path.join(__dirname, "../public/process_id.txt")}`, { encoding: "utf-8" }).toString().replace(/\r?\n/g, "")
+      console.log(pid)
 
       let window = "no"
       if (item.window === WindowType.MIN) window = "min"
       if (item.window === WindowType.MAX) window = "max"
 
-      if (p.pid)  // null check
-        child_process.spawn(`start ${path.join(__dirname, "../public/window.vbs")}`, [p.pid.toString(), window], { shell: true })
+      if (pid && window !== "no")
+        child_process.spawnSync(`start ${path.join(__dirname, "../public/window.vbs")} ${ pid } ${ window }`, { shell: true })
 
       if (item.delay)
         await delay(item.delay * 1000)
