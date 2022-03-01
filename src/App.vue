@@ -28,6 +28,7 @@ import TheSideMenu from "@/components/layouts/TheSideMenu.vue"
   user-select: none;
 }
 </style>
+
 <style lang="scss" scoped>
 $app_height_margin: 20px;
 .app {

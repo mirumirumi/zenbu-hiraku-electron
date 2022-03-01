@@ -1,17 +1,26 @@
-Dim shell
-Set shell = WScript.CreateObject("WScript.Shell")
+dim shell
+set shell = WScript.CreateObject("WScript.Shell")
 
-Dim pid
+dim pid
 pid = WScript.Arguments.Item(0)
-Dim window
+dim window
 window = WScript.Arguments.Item(1)
 
-shell.AppActivate CStr(pid)
+dim counter
 
-if window = "min" then
-    shell.SendKeys "% n"
-elseif window = "max" then
-    shell.SendKeys "% x"
-end if
+for counter = 1 to 5
+    if shell.AppActivate(CStr(pid)) then
+        WScript.Sleep 333
 
-Set shell = Nothing
+        if window = "min" then
+            shell.SendKeys "% n"
+        elseif window = "max" then
+            shell.SendKeys "% x"
+        end if
+        
+        Set shell = Nothing
+        exit For
+    else
+        WScript.Sleep 500
+    end if
+next

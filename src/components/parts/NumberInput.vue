@@ -1,6 +1,6 @@
 <template>
   <div class="number_input">
-    <input type="number" class="input" :class="{ 'disable': isDisable }" v-model="number"  @change="emitEvent(number)" :tabindex="tabindex" :placeholder="placeholder" min="0" max="999">
+    <input type="number" class="input" :class="{ 'disable': isDisable }" v-model="number"  @change="emitEvent(number)" :tabindex="tabindex" :placeholder="placeholder">
   </div>
 </template>
 
@@ -27,16 +27,18 @@ const width = ref(p.width)
 const textAlign = ref(p.textAlign ?? "right")
 
 const emitEvent = (value: number|undefined) => {
-  if (p.settingName && value) {
-    emit("delayExec", value)
-  } else if (value) {
-    emit("changeValue", value)
+  if (p.settingName) {
+    emit("delayExec", value ?? 0)
+  } else {
+    emit("changeValue", value ?? 0)
   }
 }
 
 watch(number, () => {
   if (!p.settingName) return
-  if (number.value as unknown as string == "") number.value = 0
+  if ((number.value as unknown as string) === "") number.value = 0
+  if ((number.value ?? 0) < 0) number.value = 0
+  if (999 < (number.value ?? 0)) number.value = 999
 })
 </script>
 

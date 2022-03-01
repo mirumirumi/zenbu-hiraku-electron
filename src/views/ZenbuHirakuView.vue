@@ -65,17 +65,22 @@ if (await localForage.getItem("OpenItems")) {
 }
 
 /**
- * for execAllOpen from main process
+ * for execAllOpen from main process and auto update enable?
  */
 window.electron.removeAllListeners("OpenItems")
+window.electron.removeAllListeners("Preferences")
+
 window.electron.exchangeOpenItems(deepCopy(items.value))
 
 const isExecAtStartApp = toBool(localStorage.getItem("isExecAtStartApp") ?? "false")
 const delayExec =      parseInt(localStorage.getItem("delayExec")        ?? "10"   )
 
-window.electron.removeAllListeners("Preferences")
 window.electron.exchangeIsExecAtStartApp(isExecAtStartApp)
 window.electron.exchangeDelayExec(delayExec)
+
+const isAutoUpdate = toBool(localStorage.getItem("isConfirmAutoUpdateApp") ?? "true")
+
+window.electron.exchangeIsAutoUpdate(isAutoUpdate)
 
 /**
  * add item
