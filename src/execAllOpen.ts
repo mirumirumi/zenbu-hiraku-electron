@@ -30,17 +30,17 @@ export default (win: BrowserWindow): void => {
       console.log("args:", args)
       console.log("item.path:", item.path)
 
-      child_process.spawn(`start ${ item.path }`, args, { shell: true })
+      child_process.spawn(`start "" "${ item.path }"`, args, { shell: true })
 
       await delay(333)  // it's a mystery if these numbers are really good enough
 
       // write process id
-      child_process.spawnSync(`start ${path.join(__dirname, "../public/process.vbs")}`, { shell: true })
+      child_process.spawnSync(`start ${ path.join(__dirname, "../public/process.vbs") }`, { shell: true })
 
       await delay(333)  // it's a mystery if these numbers are really good enough (this one looked like it could do without it, but just in case)
 
       // read process id
-      const pid = fs.readFileSync(`${path.join(__dirname, "../public/process_id.txt")}`, { encoding: "utf-8" }).toString().replace(/\r?\n/g, "")
+      const pid = fs.readFileSync(`${ path.join(__dirname, "../public/process_id.txt") }`, { encoding: "utf-8" }).toString().replace(/\r?\n/g, "")
       console.log(pid)
 
       let window = "no"
@@ -48,7 +48,7 @@ export default (win: BrowserWindow): void => {
       if (item.window === WindowType.MAX) window = "max"
 
       if (pid && window !== "no")
-        child_process.spawnSync(`start ${path.join(__dirname, "../public/window.vbs")} ${ pid } ${ window }`, { shell: true })
+        child_process.spawnSync(`start ${ path.join(__dirname, "../public/window.vbs") } ${ pid } ${ window }`, { shell: true })
 
       if (item.delay)
         await delay(item.delay * 1000)
