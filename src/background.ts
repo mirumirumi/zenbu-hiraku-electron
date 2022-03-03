@@ -91,6 +91,74 @@ async function createWindow() {
     win.loadURL("app://./index.html")
   }
 
+  /* It's better to wait for the Promise of createWindow to be resolved, but since it doesn't seem to work, I decided to put a large delay in between.
+  I think 5 seconds is enough unless the application is too bloated.
+  And since this is like a total delay, I'll subtract 5 seconds from it. */
+  const SEC_SUBTRACT = 5
+  await delay(SEC_SUBTRACT * 1000)
+
+  /**
+   * execAllOpen if it's set up
+   */
+  win.webContents.send("requestIsExecAtStartApp")
+
+  ipcMain.on("replyIsExecAtStartApp", (e: IpcMainEvent, isExecAtStartApp: boolean) => {
+    if (isExecAtStartApp) {
+      win.webContents.send("requestDelayExec")
+
+      ipcMain.on("replyDelayExec", async (e: IpcMainEvent, delayExec: number) => {
+        if (SEC_SUBTRACT <= delayExec) delayExec = delayExec - SEC_SUBTRACT
+        await delay(delayExec * 1000)
+        await execAllOpen(win)
+      })
+    }
+  })
+
+  /**
+   * auto update
+   */
+  win.webContents.send("requestIsAutoUpdate")
+
+  ipcMain.on("replyIsAutoUpdate", (e: IpcMainEvent, isAutoUpdate: boolean) => {
+    if (isAutoUpdate) {
+      autoUpdater.checkForUpdates()
+    }
+  })
+
+  autoUpdater.on("update-downloaded", () => {
+    // quit when portable version
+    if (isPortableApp()) return
+
+    const isGo = dialog.showMessageBoxSync(win, {
+      title: "ぜんぶひらく",
+      message: "「ぜんぶひらく」の新しいバージョンをダウンロードしました。再起動して更新を適用しますか？",
+      type: "info",
+      buttons: ["更新して再起動", "あとで"],
+      cancelId: 1,
+      defaultId: 0,
+    })
+    if (isGo !== 1) {
+      autoUpdater.quitAndInstall()
+    }
+  })
+
+  autoUpdater.on("update-available", () => {
+    // quit when installer version
+    if (!isPortableApp()) return
+
+    const isGo = dialog.showMessageBoxSync(win, {
+      title: "ぜんぶひらく",
+      message: "「ぜんぶひらく」の新しいバージョンがあります。ダウンロードページを開きますか？",
+      type: "info",
+      buttons: ["ダウンロードページを開く", "あとで"],
+      cancelId: 1,
+      defaultId: 0,
+    })
+    if (isGo !== 1) {
+      shell.openExternal("https://mirumi.me/apps/zh")
+    }
+  })
+
   /**
    * web page link event
    */
@@ -165,75 +233,7 @@ app.on("ready", async () => {
   /**
    * create window
    */
-  await createWindow()
-
-  /**
-   * execAllOpen if it's set up
-   */
-  await delay(3000)
-
-  win.webContents.send("requestIsExecAtStartApp")
-
-  ipcMain.on("replyIsExecAtStartApp", (e: IpcMainEvent, isExecAtStartApp: boolean) => {
-    if (isExecAtStartApp) {
-      win.webContents.send("requestDelayExec")
-
-      ipcMain.on("replyDelayExec", async (e: IpcMainEvent, delayExec: number) => {
-        /* It's better to wait for the Promise of createWindow to be resolved, but since it doesn't seem to work, I decided to put a large delay in between.
-        I think 5 seconds is enough unless the application is too bloated.
-        And since this is like a total delay, I'll subtract 5 seconds from it. */
-        if (3 <= delayExec) delayExec = delayExec - 3
-        
-        await delay(delayExec * 1000)
-        await execAllOpen(win)
-      })
-    }
-  })
-
-  /**
-   * auto update
-   */
-  win.webContents.send("requestIsAutoUpdate")
-
-  ipcMain.on("replyIsAutoUpdate", (e: IpcMainEvent, isAutoUpdate: boolean) => {
-    if (isAutoUpdate) {
-      autoUpdater.checkForUpdates()
-    }
-  })
-
-  autoUpdater.on("update-downloaded", () => {
-    // quit when portable version
-    if (isPortableApp()) return
-
-    const isGo = dialog.showMessageBoxSync(win, {
-      title: "ぜんぶひらく",
-      message: "「ぜんぶひらく」の新しいバージョンをダウンロードしました。再起動して更新を適用しますか？",
-      type: "info",
-      buttons: ["更新して再起動", "あとで"],
-      cancelId: 1,
-      defaultId: 0,
-    })
-    if (isGo !== 1){
-      autoUpdater.quitAndInstall()
-    }
-  })
-
-  autoUpdater.on("update-available", () => {
-    // quit when installer version
-    if (!isPortableApp()) return
-
-    const isGo = dialog.showMessageBoxSync(win, {
-      title: "ぜんぶひらく",
-      message: "「ぜんぶひらく」の新しいバージョンがあります。ダウンロードページを開きますか？",
-      type: "info",
-      buttons: ["ダウンロードページを開く", "あとで"],
-      cancelId: 1,
-      defaultId: 0,
-    })
-    if (isGo !== 1) {
-      shell.openExternal("https://mirumi.me/apps/zh")
-    }
-  })
+  createWindow()
 })
 
 // Exit cleanly on request from parent process in development mode.
