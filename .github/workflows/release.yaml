@@ -5,6 +5,10 @@ on:
     branches:
       - release/prd
 
+env:  # for AWS CLI (because that the specific `actions/~` are apparently not needed)
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
 jobs:
   release:
     runs-on: ubuntu-18.04  # for install Wine
@@ -45,8 +49,6 @@ jobs:
         run: |
           mkdir ~/release/
           cp dist_electron/zenbu-hiraku_setup.exe dist_electron/zenbu-hiraku_x64.exe dist_electron/zenbu-hiraku_ia32.exe ~/release/
-
-      - uses: ItsKarma/aws-cli@v1.70.0
 
       - name: Uploading to S3...
         run: |
