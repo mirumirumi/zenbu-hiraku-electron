@@ -94,8 +94,9 @@ async function createWindow() {
   /* It's better to wait for the Promise of createWindow to be resolved, but since it doesn't seem to work, I decided to put a large delay in between.
   I think 5 seconds is enough unless the application is too bloated.
   And since this is like a total delay, I'll subtract 5 seconds from it. */
-  const SEC_SUBTRACT = 5
-  await delay(SEC_SUBTRACT * 1000)
+  // const SEC_SUBTRACT = 10
+  // await delay(SEC_SUBTRACT * 1000)
+  await delay(10 * 1000)  // wait another 10 seconds, there is no particular subtraction
 
   /**
    * execAllOpen if it's set up
@@ -107,7 +108,7 @@ async function createWindow() {
       win.webContents.send("requestDelayExec")
 
       ipcMain.on("replyDelayExec", async (e: IpcMainEvent, delayExec: number) => {
-        if (SEC_SUBTRACT <= delayExec) delayExec = delayExec - SEC_SUBTRACT
+        // if (SEC_SUBTRACT <= delayExec) delayExec = delayExec - SEC_SUBTRACT
         await delay(delayExec * 1000)
         await execAllOpen(win)
       })
