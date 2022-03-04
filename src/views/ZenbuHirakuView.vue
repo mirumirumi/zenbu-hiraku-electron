@@ -73,7 +73,7 @@ window.electron.removeAllListeners("Preferences")
 window.electron.exchangeOpenItems(deepCopy(items.value))
 
 const isExecAtStartApp = toBool(localStorage.getItem("isExecAtStartApp") ?? "false")
-const delayExec =      parseInt(localStorage.getItem("delayExec")        ?? "10"   )
+const delayExec =      parseInt(localStorage.getItem("delayExec")        ?? "3"    )
 
 window.electron.exchangeIsExecAtStartApp(isExecAtStartApp)
 window.electron.exchangeDelayExec(delayExec)

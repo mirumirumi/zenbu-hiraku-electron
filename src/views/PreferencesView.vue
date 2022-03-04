@@ -61,14 +61,14 @@ pagingInit(router.currentRoute.value.name as string)
  */
 const isStartAtWindows =       ref(false)
 const isExecAtStartApp =       ref(false)
-const delayExec =              ref(10)
+const delayExec =              ref(3)
 const isConfirmAutoUpdateApp = ref(true)
 
 onBeforeMount(() => {
   // there are at the first startup
   isStartAtWindows.value =       toBool(localStorage.getItem("isStartAtWindows")       ?? "false")
   isExecAtStartApp.value =       toBool(localStorage.getItem("isExecAtStartApp")       ?? "false")
-  delayExec.value =            parseInt(localStorage.getItem("delayExec")              ?? "10"   )
+  delayExec.value =            parseInt(localStorage.getItem("delayExec")              ?? "3"   )
   isConfirmAutoUpdateApp.value = toBool(localStorage.getItem("isConfirmAutoUpdateApp") ?? "true" )
 })
 
