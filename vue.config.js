@@ -30,17 +30,29 @@ module.exports = {
           oneClick: false,
           allowToChangeInstallationDirectory: true,
           artifactName: "zenbu-hiraku_setup.${ext}",
-          publish: {
+          publish: [{
             provider: "github",
             releaseType: "release",
-          },
+          }, {
+            provider: "s3",
+            bucket: "common-prd-public-storage",
+            region: "ap-northeast-1",
+            acl:"public-read",
+            path: "/zh-releases/"
+          }],
         },
         portable: {
           "artifactName": "zenbu-hiraku_${arch}.${ext}",
-          publish: {
+          publish: [{
             provider: "github",
             releaseType: "release",
-          },
+          }, {
+            provider: "s3",
+            bucket: "common-prd-public-storage",
+            region: "ap-northeast-1",
+            acl:"public-read",
+            path: "/zh-releases/"
+          }],
         },
       }
     }
