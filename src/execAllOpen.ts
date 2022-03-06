@@ -30,25 +30,47 @@ export default (win: BrowserWindow): void => {
       console.log("args:", args)
       console.log("item.path:", item.path)
 
-      child_process.spawn(`start "" "${ item.path }"`, args, { shell: true })
+      try {
+        child_process.spawn(`start "" "${item.path}"`, args, { shell: true })
+      }
+      catch (e) {
+        console.log(e)
+      }
 
       await delay(333)  // it's a mystery if these numbers are really good enough
 
       // write process id
-      child_process.spawnSync(`start ${ path.join(__dirname, "../public/process.vbs") }`, { shell: true })
+      try {
+        child_process.spawnSync(`start "" "${ path.join(__dirname, "../public/process.vbs") }"`, { shell: true })
+      }
+      catch (e) {
+        console.log(e)
+      }
 
       await delay(333)  // it's a mystery if these numbers are really good enough (this one looked like it could do without it, but just in case)
 
       // read process id
-      const pid = fs.readFileSync(`${ path.join(__dirname, "../public/process_id.txt") }`, { encoding: "utf-8" }).toString().replace(/\r?\n/g, "")
-      console.log(pid)
+      let pid
+      try {
+        pid = fs.readFileSync(`${ path.join(__dirname, "../public/process_id.txt") }`, { encoding: "utf-8" }).toString().replace(/\r?\n/g, "")
+        console.log(pid)
+      }
+      catch (e) {
+        console.log(e)
+      }
 
       let window = "no"
       if (item.window === WindowType.MIN) window = "min"
       if (item.window === WindowType.MAX) window = "max"
 
-      if (pid && window !== "no")
-        child_process.spawnSync(`start ${ path.join(__dirname, "../public/window.vbs") } ${ pid } ${ window }`, { shell: true })
+      if (pid && window !== "no") {
+        try {
+          child_process.spawnSync(`start "" "${ path.join(__dirname, "../public/window.vbs") }"`, [pid, window], { shell: true })
+        }
+        catch (e) {
+          console.log(e)
+        }
+      }
 
       if (item.delay)
         await delay(item.delay * 1000)

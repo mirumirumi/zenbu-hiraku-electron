@@ -215,7 +215,7 @@ const wantToEditPath = () => {
   }
   .path {
     position: relative;
-    flex-grow: 2.875;
+    flex-grow: 7;
     input {
       width: 100%;
     }
@@ -232,7 +232,7 @@ const wantToEditPath = () => {
     }
   }
   .delay {
-    flex-grow: 1.422;
+    flex-grow: 0.1;
   }
   .window {
     width: 111px;
